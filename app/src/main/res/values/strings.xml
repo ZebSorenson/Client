@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ZebFamilyMap</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="male"> male</string>
+    <string name="female"> female</string>
+    <string name="register"> register</string>
+    <string name="login" > login</string>
+    <string name="email" > email</string>
+    <string name="username" > username</string>
+</resources>
