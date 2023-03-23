@@ -1,9 +1,12 @@
 package com.example.zebfamilymap;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,6 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+
+import Logic.DataCache;
+import Logic.ServerProxy;
+import RequestResult.LoginRequest;
+import RequestResult.LoginResult;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +33,16 @@ public class LoginFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static final String SUCCESS = "Success";
+
+    private static final String FIRSTNAME = "first name";
+
+    private static final String LASTNAME = "last name";
+
+
+
+
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -36,6 +54,10 @@ public class LoginFragment extends Fragment {
     private RadioButton male, female;
 
     private Button Register, Login;
+
+    public static DataCache dataCache = DataCache.getInstance();
+
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -122,6 +144,35 @@ public class LoginFragment extends Fragment {
         Login.setOnClickListener(v -> {
 
 
+            @SuppressLint("HandlerLeak") Handler handler = new Handler(){
+                //within here need to create function called handle message
+                //will need to overide this function
+
+                @Override
+                public void handleMessage(Message message){
+                    //Make
+
+                    Bundle bundle = message.getData();
+                    if(bundle.getBoolean(SUCCESS)){
+                        //will need to make a toast object here
+                        //will let you send a message on a fragment
+                        //this is where you will change fragments to a map fragment
+                    }else{
+                        //display a message displaying an error
+                    }
+                }
+
+            };
+
+            //create your login request and afterwards
+            //will call your loginTask that takes in the handler and request object
+            //executor service items to take care of
+
+//            loginTask task = new loginTask(handler, loginRequest);
+//            ExecutorService executorService = Executors.newSingleThreadExecutor();
+//            executorService.submit(task);
+
+
             //create your handler
             //get the data
             //login task takes in a handler and a request...These are the functions that communicate with the server
@@ -137,6 +188,8 @@ public class LoginFragment extends Fragment {
         });
 
         Register.setOnClickListener(v ->{
+
+
 
 
         });
@@ -207,17 +260,76 @@ public class LoginFragment extends Fragment {
 
             Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty());
 
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
 
         }
+
+
+
+
+
     };
 
+    private static class loginTask implements Runnable{
+
+        //make a constructor to pass in items
 
 
 
+        public LoginRequest requestObject;
+
+        public Handler handlerObject;
+        //our onclick listener is giving us our request
+        //this will make this request and send it to the server and get back the result
+
+        public loginTask(Handler handler, LoginRequest request){
+
+            this.handlerObject = handler;
+            this.requestObject = request;
+
+        }
+
+        @Override
+        public void run() {
+            //want to create proxy server
+
+            ServerProxy proxyServer = new ServerProxy(); // can set up to take in the host and port number
+
+
+           LoginResult result = proxyServer.login(requestObject);
+
+           if(result.getSuccess()){
+               //call the update datacache function
+               //update the datacache
+               //from the datacache you can get the base person
+               //create a bundle and a message that will be used in the on click listener
+               //bundle is a collection of data that you put in the message and then use the handler to send the message.
+
+
+           }else{
+               //bad login
+               //new bundle
+               //send a false value
+           }
+
+
+        }
+    }
+
+//    Bundle bundle = new Bundle();
+//    Message message = Message.obtain();
+//bundle.putBoolean(SUCCESS, true);
+//bundle.putString(FIRST_NAME, basePerson.getFirstName());
+//bundle.putString(LAST_NAME, basePerson.getLastName());
+//message.setData(bundle);
+//handler.sendMessage(message);
+
+
+    //these first names and last names, these are finals that are the keys
 
 
 

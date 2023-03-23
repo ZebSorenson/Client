@@ -2,6 +2,10 @@ package Logic;
 import java.io.*;
 import java.net.*;
 
+import RequestResult.LoginRequest;
+import RequestResult.LoginResult;
+import com.google.gson.Gson;
+
 /*
 	The Client class shows how to call a web API operation from
 	a Java program.  This is typical of how your Android client
@@ -13,27 +17,24 @@ public class ServerProxy {
     // The "args" parameter should contain two command-line arguments:
     // 1. The IP address or domain name of the machine running the server
     // 2. The port number on which the server is accepting client connections
-    public static void main(String[] args) {
 
-        String serverHost = args[0];
-        String serverPort = args[1];
 
-        registerUser(serverHost, serverPort);
-        loginUser(serverHost, serverPort);
+    //for GET, the parameters will be an authtoken and a name.
+    //will be making a url that goes to the host and port but is going to the name of the person
+    //similar to addrequest property authorization and pass in the authtoken
+    //shouldn't need to use get until later in the project when you get all the people from the DB
 
-        //how can we determine which one to call?
-    }
+    //will follow same process for register
 
-    // The getGameList method calls the server's "/games/list" operation to
-    // retrieve a list of games running in the server in JSON format
-    private static void registerUser(String serverHost, String serverPort) { //[possibly revert this back
+    private static void get(String AuthToken, String functionName) { //WILL BECOME THE GET FUNCTION
+        //function name will be /person or /events depending on if getting events or getting people
 
         // This method shows how to send a GET request to a server
 
         try {
             // Create a URL indicating where the server is running, and which
             // web API operation we want to call
-            URL url = new URL("http://" + serverHost + ":" + serverPort + "/user/register");
+            URL url = new URL("http://" + AuthToken + ":" + functionName + "/user/register");
 
 
             // Start constructing our HTTP request
@@ -97,14 +98,20 @@ public class ServerProxy {
 
     // The claimRoute method calls the server's "/routes/claim" operation to
     // claim the route between Atlanta and Miami
-    private static void loginUser(String serverHost, String serverPort) {
+    private static String post(String requestString, String functionCall) {
+
+        //take in a json string
+
+        //need login function
+        //register function
+        //post and get
 
         // This method shows how to send a POST request to a server
 
         try {
             // Create a URL indicating where the server is running, and which
             // web API operation we want to call
-            URL url = new URL("http://" + serverHost + ":" + serverPort + "/user/login");
+            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + functionCall);
 
 
             // Start constructing our HTTP request
@@ -118,40 +125,17 @@ public class ServerProxy {
             http.setDoOutput(true);	// There is a request body
 
 
-            // Add an auth token to the request in the HTTP "Authorization" header
-          //  http.addRequestProperty("Authorization", "afj232hj2332"); //Not sure how we are supposed to handle this
-
-            // Specify that we would like to receive the server's response in JSON
-            // format by putting an HTTP "Accept" header on the request (this is not
-            // necessary because our server only returns JSON responses, but it
-            // provides one more example of how to add a header to an HTTP request).
-            http.addRequestProperty("Accept", "application/json");
-
             // Connect to the server and send the HTTP request
             http.connect();
 
-            //can use Gson for this section
-
-            //Json string from Login request, pass it into the function, process with Gson
-            //Write that string to the request body. Similar to how you did it in the server.
-            //Close the body like you did in the server
-            //In the login task, you will call the login server proxy...Will also call functions
-            //to get the data from the dataCache. These will be CALLED FROM LOGIN TASK
-
-            //TESTING: Start with the front end items.
-
-            // This is the JSON string we will send in the HTTP request body
-            String reqData =
-                    "{" +
-                            "\"route\": \"atlanta-miami\"" +
-                            "}"; //how do I correctly construct the right kind of request body?
 
 
             // Get the output stream containing the HTTP request body
             OutputStream reqBody = http.getOutputStream();
 
             // Write the JSON data to the request body
-            writeString(reqData, reqBody);
+
+            writeString(requestString, reqBody);
 
             // Close the request body output stream, indicating that the
             // request is complete
@@ -165,28 +149,33 @@ public class ServerProxy {
 
                 // The HTTP response status code indicates success,
                 // so print a success message
-                System.out.println("Route successfully claimed.");
-            }
-            else {
+                System.out.println("Login successfull");
 
-                // The HTTP response status code indicates an error
-                // occurred, so print out the message from the HTTP response
-                System.out.println("ERROR: " + http.getResponseMessage());
+                //need to return the response we get back from the server.
 
-                // Get the error stream containing the HTTP response body (if any)
-                InputStream respBody = http.getErrorStream();
+                //post is taking in the req data and the server will send back response body
+                //on top of this, we'll make login and register functions to turn this into the appropriate result.
+
+                InputStream respBody = http.getInputStream();
 
                 // Extract data from the HTTP response body
                 String respData = readString(respBody);
 
-                // Display the data returned from the server
-                System.out.println(respData);
+                return respData;
+            }
+            else {
+
+             //not success, return null
+
+                return null;
             }
         }
         catch (IOException e) {
             // An exception was thrown, so display the exception's stack trace
             e.printStackTrace();
         }
+
+        return null;
     }
 
     /*
@@ -212,4 +201,47 @@ public class ServerProxy {
         sw.flush();
     }
 
+    //login function that returns a login result and takes in a loginRequest object
+    //this will be called from within our run function
+
+    public LoginResult login(LoginRequest request){
+
+        String requestString = "{\"username\":\"" + request.getUsername() +
+                "\", \"password\":\"" + request.getPassword() +
+                "\"}";
+
+        //should be able to get register from specs
+
+       String responseData = post(requestString,"/user/login" );
+
+       //do some error checking here
+
+        if(responseData == null){
+            LoginResult result = new LoginResult();
+
+            result.setMessage("Error logging in");
+            result.setSuccess(false);
+        }
+        //possibly do more error checking
+
+            //use gson to take in response data
+            Gson gson = new Gson();
+
+            LoginResult result = gson.fromJson(responseData, LoginResult.class);
+
+            return result;
+
+
+    }
+
 }
+
+
+//TODO in server proxy
+
+//1st create the get function
+//Make a get people and events functions which will be similar to the login function...getpeople will take authtoken withot string
+
+//call server get, do the gson to json logic and return the result (get people and events functions)
+
+//get will take in an authtoken and a name

@@ -24,9 +24,13 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-       // Fragment fragment = fragmentManager.findFragmentById(R.id.activity)
-        //  android:id="@/mainactivity"
+        Fragment fragment = fragmentManager.findFragmentById(R.id.mainActivity);
 
+        //put this into an if to check to see if we need to go into the map fragment.
+        fragment = new LoginFragment();
+        fragmentManager.beginTransaction()
+                .add(R.id.mainActivity, fragment)
+                .commit();
 
     }
 

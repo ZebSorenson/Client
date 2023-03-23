@@ -40,3 +40,17 @@ public class DataCache {
 
     }
 }
+
+//to do in the datacache
+
+//make an update cache method that will clear all of the people and use the proxy and get all the relatives and events
+
+//in the update datacache function, will be called in the login fragment
+
+//update data will clear the cache and set our arrays that hold events and people
+//make server proxy and call get people and get events, and use that to update your cache.
+//this way you will have your base person with their relatives and events and arrays
+
+//Use the proxy server to get all the relatives that just logged in.
+
+
