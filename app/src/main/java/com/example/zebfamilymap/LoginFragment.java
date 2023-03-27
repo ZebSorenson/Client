@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import Logic.DataCache;
 import Logic.ServerProxy;
@@ -38,9 +43,6 @@ public class LoginFragment extends Fragment {
     private static final String FIRSTNAME = "first name";
 
     private static final String LASTNAME = "last name";
-
-
-
 
 
     // TODO: Rename and change types of parameters
@@ -157,32 +159,31 @@ public class LoginFragment extends Fragment {
                         //will need to make a toast object here
                         //will let you send a message on a fragment
                         //this is where you will change fragments to a map fragment
+                       Toast.makeText(getActivity(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(requireContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
+
+                        FragmentManager fragmentManager = getParentFragmentManager();
                     }else{
-                        //display a message displaying an error
+
+                        Toast.makeText(getActivity(), "Error logging user in. There may be an invalid password or username", Toast.LENGTH_SHORT).show();
                     }
                 }
 
             };
 
-            //create your login request and afterwards
-            //will call your loginTask that takes in the handler and request object
-            //executor service items to take care of
-
-//            loginTask task = new loginTask(handler, loginRequest);
-//            ExecutorService executorService = Executors.newSingleThreadExecutor();
-//            executorService.submit(task);
-
-
             //create your handler
             //get the data
             //login task takes in a handler and a request...These are the functions that communicate with the server
-            //will be written at the bottom of this file. Next to text watcher.
 
-            //make a login request object
+            LoginRequest loginRequest = new LoginRequest();
+//            loginRequest.setUsername(username.toString());
+//            loginRequest.setPassword(password.toString());
+            loginRequest.setUsername(username.getText().toString());
+            loginRequest.setPassword(password.getText().toString());
 
-            //make a new task object, pass in handler and request object
-
-            //Executor service to be able to run on a single thread
+            loginTask task = new loginTask(handler, loginRequest);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(task);
 
 
         });
@@ -194,39 +195,13 @@ public class LoginFragment extends Fragment {
 
         });
 
-        //get the strings
-
-        //make a loginRequest object
-
-        //pass that into the login task
-
-        //the login task
-
-        //this will impliment the runnable class LoginTask that impliments rurnnable
-
-        //will have a run function...
-
-        //login task will take in a handler(bundle code) and a loginRequest
-        //insude of the run function...create a server proxy...serverhost and port number
-
-        //try yourr login through the proxy and get your login result back from this.
-        //you'll get an authtoken and a person ID. and a success value.
-
-        //if succesfful, update the datacache with the datacache
-
-        //if succesfull use a bundle and a message..can put values into a bundle,
-
-        //bundle is info that is put into a message...use the handler passed into the login task to send a message
-
-        //regist will be very similar to this.
-
-
-
 
         //look at videos of how to send a bundle in android studio.
         // Inflate the layout for this fragment
         return view;
     }
+
+
 
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -261,15 +236,13 @@ public class LoginFragment extends Fragment {
             Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty());
 
 
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
 
         }
-
-
-
 
 
     };
@@ -299,8 +272,14 @@ public class LoginFragment extends Fragment {
 
             ServerProxy proxyServer = new ServerProxy(); // can set up to take in the host and port number
 
+            //YOU COULD SET THE PORT AND HOST RIGHT HERE SINCE YOU'VE ALREADY GABBED THE INFO ABOVE
+
 
            LoginResult result = proxyServer.login(requestObject);
+
+
+
+
 
            if(result.getSuccess()){
                //call the update datacache function
@@ -309,29 +288,30 @@ public class LoginFragment extends Fragment {
                //create a bundle and a message that will be used in the on click listener
                //bundle is a collection of data that you put in the message and then use the handler to send the message.
 
+               System.out.println("The user logged in was "+ result.getUsername());
+               Bundle bundle = new Bundle();
+               Message message = Message.obtain();
+               bundle.putBoolean(SUCCESS, true); // this is where we set items to true
+               message.setData(bundle);
+               handlerObject.sendMessage(message);
+
+
 
            }else{
                //bad login
                //new bundle
                //send a false value
+               Bundle bundle = new Bundle();
+               Message message = Message.obtain();
+               bundle.putBoolean(SUCCESS, false);
+               message.setData(bundle);
+               handlerObject.sendMessage(message);
+               System.out.println("An invalid username or password was given");
            }
 
 
         }
     }
-
-//    Bundle bundle = new Bundle();
-//    Message message = Message.obtain();
-//bundle.putBoolean(SUCCESS, true);
-//bundle.putString(FIRST_NAME, basePerson.getFirstName());
-//bundle.putString(LAST_NAME, basePerson.getLastName());
-//message.setData(bundle);
-//handler.sendMessage(message);
-
-
-    //these first names and last names, these are finals that are the keys
-
-
 
 
     //end of class

@@ -39,6 +39,13 @@ public class DataCache {
     private DataCache(){
 
     }
+
+    public void updateFamilyCache(String auth, ServerProxy serverProxy){
+
+
+        //how do we deal with clearing the data?
+       // Person[] personArray = (Person[])serverProxy.getPersonsByID(auth);
+    }
 }
 
 //to do in the datacache

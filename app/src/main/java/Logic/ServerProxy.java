@@ -4,6 +4,8 @@ import java.net.*;
 
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
+import RequestResult.PersonIDResult;
+
 import com.google.gson.Gson;
 
 /*
@@ -12,6 +14,12 @@ import com.google.gson.Gson;
 	app will call the web API operations of your server.
 */
 public class ServerProxy {
+
+   private String port;
+
+   private String host;
+
+
 
     // The client's "main" method.
     // The "args" parameter should contain two command-line arguments:
@@ -26,74 +34,43 @@ public class ServerProxy {
 
     //will follow same process for register
 
-    private static void get(String AuthToken, String functionName) { //WILL BECOME THE GET FUNCTION
+    private static String get(String AuthToken, String functionName) { //WILL BECOME THE GET FUNCTION
         //function name will be /person or /events depending on if getting events or getting people
 
         // This method shows how to send a GET request to a server
 
+        String result = null;
+
         try {
-            // Create a URL indicating where the server is running, and which
-            // web API operation we want to call
-            URL url = new URL("http://" + AuthToken + ":" + functionName + "/user/register");
+            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + functionName);
 
 
             // Start constructing our HTTP request
-            HttpURLConnection http = (HttpURLConnection)url.openConnection(); //How can I make sure this is the right type of request??
-
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
             // Specify that we are sending an HTTP GET request
-            http.setRequestMethod("POST"); //BOTH REGISTER AND LOGIN ARE POST REQUESTS
+            http.setRequestMethod("GET");
 
             // Indicate that this request will not contain an HTTP request body
-            http.setDoOutput(false); // but we will have a request body?
-
+            http.setDoOutput(false);
 
             // Add an auth token to the request in the HTTP "Authorization" header
-           // http.addRequestProperty("Authorization", "afj232hj2332"); // not sure how to handle the authtoken in this situation
-
-            // Specify that we would like to receive the server's response in JSON
-            // format by putting an HTTP "Accept" header on the request (this is not
-            // necessary because our server only returns JSON responses, but it
-            // provides one more example of how to add a header to an HTTP request).
-            http.addRequestProperty("Accept", "application/json");
-
+            http.addRequestProperty("Authorization", AuthToken);
 
             // Connect to the server and send the HTTP request
             http.connect();
 
-            // By the time we get here, the HTTP response has been received from the server.
-            // Check to make sure that the HTTP response from the server contains a 200
-            // status code, which means "success".  Treat anything else as a failure.
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-                // Get the input stream containing the HTTP response body
                 InputStream respBody = http.getInputStream();
-
-                // Extract JSON data from the HTTP response body
-                String respData = readString(respBody);
-
-                // Display the JSON data returned from the server
-                System.out.println(respData);
+                result = readString(respBody);
+            } else {
+                //System.out.println("serverGet ERROR: " + http.getResponseMessage());
             }
-            else {
-                // The HTTP response status code indicates an error
-                // occurred, so print out the message from the HTTP response
-                System.out.println("ERROR: " + http.getResponseMessage());
-
-                // Get the error stream containing the HTTP response body (if any)
-                InputStream respBody = http.getErrorStream();
-
-                // Extract data from the HTTP response body
-                String respData = readString(respBody);
-
-                // Display the data returned from the server
-                System.out.println(respData);
-            }
-        }
-        catch (IOException e) {
-            // An exception was thrown, so display the exception's stack trace
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return result;
     }
 
     // The claimRoute method calls the server's "/routes/claim" operation to
@@ -107,13 +84,16 @@ public class ServerProxy {
         //post and get
 
         // This method shows how to send a POST request to a server
+//        System.out.println("\n");
+//        System.out.println("Printing out the request data");
+//        System.out.println(requestString);
 
         try {
             // Create a URL indicating where the server is running, and which
             // web API operation we want to call
             URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + functionCall);
 
-
+            //192.168.5.200 the mcdonalds IP lol
             // Start constructing our HTTP request
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
 
@@ -127,8 +107,6 @@ public class ServerProxy {
 
             // Connect to the server and send the HTTP request
             http.connect();
-
-
 
             // Get the output stream containing the HTTP request body
             OutputStream reqBody = http.getOutputStream();
@@ -221,6 +199,7 @@ public class ServerProxy {
 
             result.setMessage("Error logging in");
             result.setSuccess(false);
+            return result;
         }
         //possibly do more error checking
 
@@ -234,6 +213,21 @@ public class ServerProxy {
 
     }
 
+    public PersonIDResult getPersonsByID(String authToken){
+
+        String peopleList = get(authToken, "/person");
+
+        Gson gson = new Gson();
+
+        PersonIDResult allPersons  = gson.fromJson(peopleList, PersonIDResult.class);
+
+        return allPersons;
+    }
+
+
+
+
+//end of class
 }
 
 
