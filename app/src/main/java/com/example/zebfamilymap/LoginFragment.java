@@ -31,7 +31,7 @@ import RequestResult.PersonResult;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link LoginFragment#newInstance} factory method to
+
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
@@ -74,19 +74,18 @@ public class LoginFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment LoginRegisterFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static LoginFragment newInstance(String param1, String param2) {
+//        LoginFragment fragment = new LoginFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,8 +183,13 @@ public class LoginFragment extends Fragment {
 //        };
 
         Login.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
+
+                Toast.makeText(getActivity(), "Epic Failure dude", Toast.LENGTH_SHORT).show();
+
                 //grab the username for the text, and all the information?
 
                 //Toast.makeText(getActivity().getApplicationContext(), "Welcome " + username.getText().toString(), Toast.LENGTH_LONG).show();
@@ -195,7 +199,7 @@ public class LoginFragment extends Fragment {
                 //get the data
                 //login task takes in a handler and a request...These are the functions that communicate with the server
 
-                Handler handler = new Handler(Looper.getMainLooper()){
+                Handler handler = new Handler(Looper.getMainLooper()){ // is this looper supposed to be here?
                     //within here need to create function called handle message
                     //will need to overide this function
 
@@ -206,12 +210,23 @@ public class LoginFragment extends Fragment {
                         //Make
 
                         Bundle bundle = message.getData();
+
+                        String firstName = bundle.getString(FIRSTNAME);
+
+                        //!firstName.equals("error")
                         if(bundle.getBoolean(SUCCESS)){
                             //will need to make a toast object here
                             //will let you send a message on a fragment
                             //this is where you will change fragments to a map fragment
                             System.out.println("you have entered a good toast object");
-                            Toast.makeText(getActivity().getApplicationContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
+
+
+
+                            Toast.makeText(getActivity(), "Welcome " + bundle.getString(FIRSTNAME), Toast.LENGTH_SHORT).show();
+
+
+                           // toast.show();
+
                             // Toast.makeText(requireContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
                             //possibly have this as getActivity
                             FragmentManager fragmentManager = getParentFragmentManager();
@@ -225,8 +240,6 @@ public class LoginFragment extends Fragment {
                 };
 
                 LoginRequest loginRequest = new LoginRequest();
-//            loginRequest.setUsername(username.toString());
-//            loginRequest.setPassword(password.toString());
                 loginRequest.setUsername(username.getText().toString());
                 loginRequest.setPassword(password.getText().toString());
 
@@ -348,6 +361,8 @@ public class LoginFragment extends Fragment {
 
            LoginResult result = proxyServer.login(requestObject);
 
+           String error = "Error";
+
 
 
 
@@ -362,7 +377,11 @@ public class LoginFragment extends Fragment {
                System.out.println("The user logged in was "+ result.getUsername());
                Bundle bundle = new Bundle();
                Message message = Message.obtain();
-               bundle.putBoolean(SUCCESS, true); // this is where we set items to true
+//               bundle.putBoolean(SUCCESS, true);
+// this is where we set items to true
+
+               bundle.putString(FIRSTNAME, result.getUsername());
+
                message.setData(bundle);
                handlerObject.sendMessage(message);
 
@@ -390,6 +409,7 @@ public class LoginFragment extends Fragment {
 
         }
     }
+
 
 
 
