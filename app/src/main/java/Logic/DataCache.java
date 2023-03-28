@@ -2,6 +2,7 @@ package Logic;
 
 import java.util.ArrayList;
 
+import RequestResult.PersonResult;
 import model.Event;
 import model.Person;
 
@@ -40,11 +41,22 @@ public class DataCache {
 
     }
 
-    public void updateFamilyCache(String auth, ServerProxy serverProxy){
+    public void addFamilyMembers(PersonResult result){
 
+        //Currently using a person Array...Would be better to create a datamember as an
+        //arrayList...could loop through the array and just add everybody to the arrayList
+
+        Person[] personArray = null;
 
         //how do we deal with clearing the data?
-       // Person[] personArray = (Person[])serverProxy.getPersonsByID(auth);
+         personArray = (Person[])result.getData();
+        //every person in the database, whether or not related.
+
+
+
+        System.out.println(personArray.length + " person were added to the datacache");
+
+
     }
 }
 

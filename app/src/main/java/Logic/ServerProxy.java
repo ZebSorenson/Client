@@ -2,9 +2,11 @@ package Logic;
 import java.io.*;
 import java.net.*;
 
+import RequestResult.ClearResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
 import RequestResult.PersonIDResult;
+import RequestResult.PersonResult;
 
 import com.google.gson.Gson;
 
@@ -213,16 +215,53 @@ public class ServerProxy {
 
     }
 
-    public PersonIDResult getPersonsByID(String authToken){
+    public PersonResult getAllPersons(String authToken){
 
         String peopleList = get(authToken, "/person");
 
         Gson gson = new Gson();
 
-        PersonIDResult allPersons  = gson.fromJson(peopleList, PersonIDResult.class);
+        PersonResult allPersons  = gson.fromJson(peopleList, PersonResult.class);
 
         return allPersons;
     }
+
+    public ClearResult clear() {
+        try {
+            // Create a URL indicating where the server is running, and which
+            // web API operation we want to call
+            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + "/clear");
+
+            // Start constructing our HTTP request
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+
+            // Specify that we are sending an HTTP POST request
+            http.setRequestMethod("POST");
+
+            // Indicate that this request will contain an HTTP request body
+            http.setDoOutput(true);
+
+            // Connect to the server and send the HTTP request
+            http.connect();
+
+            OutputStream reqBody = http.getOutputStream();
+
+            reqBody.close();
+
+            String respData = readString(http.getInputStream());
+
+            Gson gson = new Gson();
+
+            ClearResult result = gson.fromJson(respData, ClearResult.class);
+
+            return result;
+        } catch (IOException e) {
+            // An exception was thrown, so display the exception's stack trace
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
 
 
