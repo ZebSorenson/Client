@@ -8,6 +8,8 @@ import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
 import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
+import RequestResult.RegisterRequest;
+import RequestResult.RegisterResult;
 import model.Person;
 
 import com.google.gson.Gson;
@@ -133,7 +135,7 @@ public class ServerProxy {
 
                 // The HTTP response status code indicates success,
                 // so print a success message
-                System.out.println("Login successfull");
+               // System.out.println("Login successfull");
 
                 //need to return the response we get back from the server.
 
@@ -219,15 +221,15 @@ public class ServerProxy {
 
     }
 
-    public PersonIDResult getSinglePerson(String personID, LoginResult result){
+    public PersonIDResult getSinglePerson(String personID, String token){
 
-       String responseData = get(result.getAuthtoken(),"/person/"+personID);
+       String responseData = get(token,"/person/"+personID);
 
         if(responseData == null){
             PersonIDResult person_result = new PersonIDResult();
 
-            result.setMessage("Error grabbing person info");
-            result.setSuccess(false);
+            person_result.setMessage("Error grabbing person info");
+            person_result.setSuccess(false);
             return person_result;
         }
 
@@ -295,6 +297,34 @@ public class ServerProxy {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public RegisterResult register(RegisterRequest request) {
+
+        System.out.println("Entered into register proxy function");
+
+        String reqData = "{\"username\":\"" + request.getUsername() +
+                "\", \"password\":\"" + request.getPassword() +
+                "\", \"email\":\"" + request.getEmail() +
+                "\", \"firstName\":\"" + request.getFirstName() +
+                "\", \"lastName\":\"" + request.getLastName() +
+                "\", \"gender\":\"" + request.getGender() +
+                "\"}";
+
+        String respData = post(reqData, "/user/register");
+
+        if (respData == null) {
+            RegisterResult badResult = new RegisterResult();
+            badResult.setSuccess(false);
+            badResult.setMessage("Error registering user");
+            System.out.println("There was an issue registering the user");
+            return badResult;
+        }
+
+        Gson gson = new Gson();
+        RegisterResult result = gson.fromJson(respData, RegisterResult.class);
+
+        return result;
     }
 
 

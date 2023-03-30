@@ -1,6 +1,7 @@
 package Logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import RequestResult.EventResult;
 import RequestResult.PersonResult;
@@ -42,6 +43,8 @@ public class DataCache {
 
     }
 
+
+
     public void addFamilyMembers(PersonResult result){
 
         //Currently using a person Array...Would be better to create a datamember as an
@@ -53,11 +56,26 @@ public class DataCache {
          personArray = (Person[])result.getData();
         //every person in the database, whether or not related.
 
+       // people.addAll(Arrays.asList(personArray)); //adding everyone to the ArrayList bcuz easier
+
+
+
 
 
         System.out.println(personArray.length + " person were added to the datacache");
 
 
+    }
+
+    public Person getPersonByID(String personID){
+
+        for(Person person: people){
+            if(person.getPersonID().equals(personID)){
+                return person;
+            }
+        }
+
+        return null;
     }
 
     public void addEventsCache(EventResult result){

@@ -1,9 +1,10 @@
 package com.example.zebfamilymap;
 
 import android.annotation.SuppressLint;
-import android.app.Person;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -30,6 +31,9 @@ import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
 import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
+import RequestResult.RegisterRequest;
+import RequestResult.RegisterResult;
+import model.Person;
 
 
 /**
@@ -156,34 +160,6 @@ public class LoginFragment extends Fragment {
 
         email.addTextChangedListener(textWatcher);
 
-//        Handler handler = new Handler(Looper.getMainLooper()){
-//            //within here need to create function called handle message
-//            //will need to overide this function
-//
-//            //possibly look into listener to show your Toast object
-//
-//            @Override
-//            public void handleMessage(Message message){
-//                //Make
-//
-//                Bundle bundle = message.getData();
-//                if(bundle.getBoolean(SUCCESS)){
-//                    //will need to make a toast object here
-//                    //will let you send a message on a fragment
-//                    //this is where you will change fragments to a map fragment
-//                    System.out.println("you have entered a good toast object");
-//                    Toast.makeText(getActivity().getApplicationContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
-//                    // Toast.makeText(requireContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
-//                    //possibly have this as getActivity
-//                    FragmentManager fragmentManager = getParentFragmentManager();
-//                }else{
-////getConext
-//                    Toast.makeText(getActivity().getApplicationContext(), "Error logging user in. There may be an invalid password or username", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//
-//        };
 
         //login onclick
         Login.setOnClickListener(v ->{
@@ -207,7 +183,7 @@ public class LoginFragment extends Fragment {
 
                     }
                     else{
-                        Toast.makeText(getActivity(), "Epic Failure dude", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Error logging in", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -224,37 +200,71 @@ public class LoginFragment extends Fragment {
             executorService.submit(task);
 
         });
-       // Login.setOnClickListener(v -> { //onclick listener will be diff than onClick lister
 
-//            Toast.makeText(getActivity().getApplicationContext(), "Welcome " , Toast.LENGTH_LONG).show();
-//
-//            //create your handler
-//            //get the data
-//            //login task takes in a handler and a request...These are the functions that communicate with the server
-//
-//            LoginRequest loginRequest = new LoginRequest();
-////            loginRequest.setUsername(username.toString());
-////            loginRequest.setPassword(password.toString());
-//            loginRequest.setUsername(username.getText().toString());
-//            loginRequest.setPassword(password.getText().toString());
-//
-//            loginTask task = new loginTask(handler, loginRequest);
-//            ExecutorService executorService = Executors.newSingleThreadExecutor();
-//            executorService.submit(task);
+        Register.setOnClickListener(v ->{
 
+            boolean maleCheck, femaleCheck;
+            String gender = "";
+            maleCheck = male.isChecked();
+            femaleCheck = female.isChecked();
+            if(maleCheck){
+                gender = "m";
+            }
+            else if(femaleCheck){
+                gender = "f";
+            }
 
-      //  });
-
-//        Register.setOnClickListener(v ->{
-//
-//
-//
-//
-//        });
+            String Host, Port, Username, Password, Firstname, Lastname, Email;
+            Host = host.getText().toString();
+            Port = port.getText().toString();
+            Username = username.getText().toString();
+            Password = password.getText().toString();
+            Firstname = firstName.getText().toString();
+            Lastname = lastName.getText().toString();
+            Email = email.getText().toString();
 
 
-        //look at videos of how to send a bundle in android studio.
-        // Inflate the layout for this fragment
+            @SuppressLint("HandlerLeak") Handler handler = new Handler(Looper.getMainLooper()){
+
+                @Override
+                public void handleMessage(Message message){
+                    Bundle bundle = message.getData();
+
+
+
+
+                    if(bundle.getBoolean(SUCCESS)){
+                        System.out.println("you have entered a good toast object");
+                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Welcome newly registered user!  " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                        // Fragment fragment = new LoginFragment(); // change this to map in the future
+                        // fragmentManager.beginTransaction().replace(R.id.mainActivity, fragment).commit();
+
+                    }
+                    else{
+                        Toast.makeText(getActivity(), "Error registering the new user", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+
+
+            };
+
+            RegisterRequest request = new RegisterRequest();
+            request.setUsername(Username);
+            request.setPassword(Password);
+            request.setFirstName(Firstname);
+            request.setLastName(Lastname);
+            request.setEmail(Email);
+            request.setGender(gender);
+            registerTask task = new registerTask(handler, request);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(task);
+
+        });
+
         return view;
     }
 
@@ -274,6 +284,8 @@ public class LoginFragment extends Fragment {
 
 
 
+
+
             Host = host.getText().toString();
 
             Port = port.getText().toString();
@@ -290,7 +302,17 @@ public class LoginFragment extends Fragment {
 
             Login.setEnabled(!Username.isEmpty() && !Password.isEmpty());
 
-            Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty());
+           Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
+
+           // Register.setEnabled(male.isSelected() || female.isSelected());
+
+            //need to update this so that male or female can be selected last
+
+           // Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty());
+
+
+
+
 
 
 
@@ -337,11 +359,6 @@ public class LoginFragment extends Fragment {
 
            LoginResult result = proxyServer.login(requestObject);
 
-           String error = "Error";
-
-
-
-
 
            if(result.getSuccess()){
                //call the update datacache function
@@ -352,7 +369,7 @@ public class LoginFragment extends Fragment {
 
                //get your base person for the first and last name
 
-               PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result);
+               PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result.getAuthtoken());
 
                System.out.println("The user logged in was "+ result.getUsername());
                Bundle bundle = new Bundle();
@@ -385,6 +402,62 @@ public class LoginFragment extends Fragment {
            }
 
 
+        }
+    }
+
+
+    private static class registerTask implements Runnable {
+
+        public RegisterRequest request;
+        public Handler handler;
+        public RegisterResult registerResults;
+
+        public registerTask(Handler handler, RegisterRequest request) {
+            this.handler = handler;
+            this.request = request;
+        }
+
+
+        @Override
+        public void run() {
+            ServerProxy proxy = new ServerProxy(); //want to add in the port and host number here
+
+            registerResults = proxy.register(request);
+
+            if (registerResults.getSuccess()) {
+
+               //Update the dataCache Here!!
+
+               // Person firstChild = dataCache.getPersonByID(registerResults.getPersonID());
+
+                //need a better way of getting the first and last name
+
+                PersonIDResult firstChild = proxy.getSinglePerson(registerResults.getPersonID(), registerResults.getAuthtoken());
+
+                //make the change here to get the person!!!
+
+                Bundle bundle = new Bundle();
+                Message message = Message.obtain();
+                bundle.putBoolean(SUCCESS, true);
+                bundle.putString(FIRSTNAME, firstChild.getFirstName());
+                bundle.putString(LASTNAME, firstChild.getLastName());
+                message.setData(bundle);
+                handler.sendMessage(message);
+
+                PersonResult allPeople = proxy.getAllPersons(registerResults.getAuthtoken());
+
+                dataCache.addFamilyMembers(allPeople);
+
+                EventResult allEvents = proxy.getAllEvents(registerResults.getAuthtoken());
+
+                dataCache.addEventsCache(allEvents);
+            } else {
+                Bundle bundle = new Bundle();
+                Message message = Message.obtain();
+                bundle.putBoolean(SUCCESS, false);
+                message.setData(bundle);
+                handler.sendMessage(message);
+            }
         }
     }
 
