@@ -1,6 +1,7 @@
 package com.example.zebfamilymap;
 
 import android.annotation.SuppressLint;
+import android.app.Person;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -24,8 +25,10 @@ import java.util.concurrent.Executors;
 
 import Logic.DataCache;
 import Logic.ServerProxy;
+import RequestResult.EventResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
+import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
 
 
@@ -182,75 +185,45 @@ public class LoginFragment extends Fragment {
 //
 //        };
 
-        Login.setOnClickListener(new View.OnClickListener() {
+        //login onclick
+        Login.setOnClickListener(v ->{
+
+            String userName = username.getText().toString();
+            String passWord = password.getText().toString();
 
 
-            @Override
-            public void onClick(View v) {
+            @SuppressLint("HandlerLeak") Handler handler = new Handler(Looper.getMainLooper()){
 
-                Toast.makeText(getActivity(), "Epic Failure dude", Toast.LENGTH_SHORT).show();
-
-                //grab the username for the text, and all the information?
-
-                //Toast.makeText(getActivity().getApplicationContext(), "Welcome " + username.getText().toString(), Toast.LENGTH_LONG).show();
-
-
-                //create your handler
-                //get the data
-                //login task takes in a handler and a request...These are the functions that communicate with the server
-
-                Handler handler = new Handler(Looper.getMainLooper()){ // is this looper supposed to be here?
-                    //within here need to create function called handle message
-                    //will need to overide this function
-
-                    //possibly look into listener to show your Toast object
-
-                    @Override
-                    public void handleMessage(Message message){
-                        //Make
-
-                        Bundle bundle = message.getData();
-
-                        String firstName = bundle.getString(FIRSTNAME);
-
-                        //!firstName.equals("error")
-                        if(bundle.getBoolean(SUCCESS)){
-                            //will need to make a toast object here
-                            //will let you send a message on a fragment
-                            //this is where you will change fragments to a map fragment
-                            System.out.println("you have entered a good toast object");
-
-
-
-                            Toast.makeText(getActivity(), "Welcome " + bundle.getString(FIRSTNAME), Toast.LENGTH_SHORT).show();
-
-
-                           // toast.show();
-
-                            // Toast.makeText(requireContext(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
-                            //possibly have this as getActivity
-                            FragmentManager fragmentManager = getParentFragmentManager();
-                        }else{
-//getConext
-                            Toast.makeText(getActivity().getApplicationContext(), "Error logging user in. There may be an invalid password or username", Toast.LENGTH_SHORT).show();
-                        }
+                @Override
+                public void handleMessage(Message message){
+                    Bundle bundle = message.getData();
+                    if(bundle.getBoolean(SUCCESS)){
+                        System.out.println("you have entered a good toast object");
+                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Welcome " + bundle.getString(FIRSTNAME) + " " + bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
+                        FragmentManager fragmentManager = getParentFragmentManager();
+                       // Fragment fragment = new LoginFragment(); // change this to map in the future
+                       // fragmentManager.beginTransaction().replace(R.id.mainActivity, fragment).commit();
 
                     }
+                    else{
+                        Toast.makeText(getActivity(), "Epic Failure dude", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-                };
 
-                LoginRequest loginRequest = new LoginRequest();
-                loginRequest.setUsername(username.getText().toString());
-                loginRequest.setPassword(password.getText().toString());
 
-                loginTask task = new loginTask(handler, loginRequest);
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
-                executorService.submit(task);
 
-                //call the executor service and set it to a single thread executor?
-            }
+            };
+
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.setUsername(userName);
+            loginRequest.setPassword(passWord);
+            loginTask task = new loginTask(handler, loginRequest);
+            ExecutorService executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(task);
+
         });
-
        // Login.setOnClickListener(v -> { //onclick listener will be diff than onClick lister
 
 //            Toast.makeText(getActivity().getApplicationContext(), "Welcome " , Toast.LENGTH_LONG).show();
@@ -321,6 +294,9 @@ public class LoginFragment extends Fragment {
 
 
 
+
+
+
         }
 
         @Override
@@ -374,14 +350,16 @@ public class LoginFragment extends Fragment {
                //create a bundle and a message that will be used in the on click listener
                //bundle is a collection of data that you put in the message and then use the handler to send the message.
 
+               //get your base person for the first and last name
+
+               PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result);
+
                System.out.println("The user logged in was "+ result.getUsername());
                Bundle bundle = new Bundle();
                Message message = Message.obtain();
-//               bundle.putBoolean(SUCCESS, true);
-// this is where we set items to true
-
-               bundle.putString(FIRSTNAME, result.getUsername());
-
+               bundle.putBoolean(SUCCESS, true);
+               bundle.putString(FIRSTNAME, firstChild.getFirstName()); //need to get first and last name of person
+               bundle.putString(LASTNAME, firstChild.getLastName());
                message.setData(bundle);
                handlerObject.sendMessage(message);
 
@@ -389,9 +367,9 @@ public class LoginFragment extends Fragment {
 
                dataCache.addFamilyMembers(allPeople);
 
+               EventResult allEvents = proxyServer.getAllEvents(result.getAuthtoken());
 
-
-
+               dataCache.addEventsCache(allEvents);
 
 
            }else{

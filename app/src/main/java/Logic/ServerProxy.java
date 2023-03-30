@@ -3,10 +3,12 @@ import java.io.*;
 import java.net.*;
 
 import RequestResult.ClearResult;
+import RequestResult.EventResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
 import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
+import model.Person;
 
 import com.google.gson.Gson;
 
@@ -217,6 +219,28 @@ public class ServerProxy {
 
     }
 
+    public PersonIDResult getSinglePerson(String personID, LoginResult result){
+
+       String responseData = get(result.getAuthtoken(),"/person/"+personID);
+
+        if(responseData == null){
+            PersonIDResult person_result = new PersonIDResult();
+
+            result.setMessage("Error grabbing person info");
+            result.setSuccess(false);
+            return person_result;
+        }
+
+        Gson gson = new Gson();
+
+        PersonIDResult singlePersonResult = gson.fromJson(responseData, PersonIDResult.class);
+
+        return singlePersonResult;
+
+
+
+    }
+
     public PersonResult getAllPersons(String authToken){
 
         String peopleList = get(authToken, "/person");
@@ -226,6 +250,17 @@ public class ServerProxy {
         PersonResult allPersons  = gson.fromJson(peopleList, PersonResult.class);
 
         return allPersons;
+    }
+
+    public EventResult getAllEvents(String authToken){
+
+            String eventList = get(authToken, "/event");
+
+            Gson gson = new Gson();
+
+            EventResult allEvents = gson.fromJson(eventList, EventResult.class);
+
+            return allEvents;
     }
 
     public ClearResult clear() {

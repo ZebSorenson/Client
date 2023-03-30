@@ -2,6 +2,7 @@ package Logic;
 
 import java.util.ArrayList;
 
+import RequestResult.EventResult;
 import RequestResult.PersonResult;
 import model.Event;
 import model.Person;
@@ -58,6 +59,18 @@ public class DataCache {
 
 
     }
+
+    public void addEventsCache(EventResult result){
+
+        Event[] eventArray = null;
+
+        eventArray = (Event[]) result.getData();
+
+        System.out.println(eventArray.length+" Events were added to the datacache");
+    }
+
+
+    //end of class
 }
 
 //to do in the datacache
