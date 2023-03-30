@@ -302,7 +302,9 @@ public class LoginFragment extends Fragment {
 
             Login.setEnabled(!Username.isEmpty() && !Password.isEmpty());
 
-           Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
+            Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
+
+            //want to set up listeners for both male and female buttons. Us an onclick listener and then put this code into those button listeners
 
            // Register.setEnabled(male.isSelected() || female.isSelected());
 
