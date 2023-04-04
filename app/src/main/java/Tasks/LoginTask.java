@@ -65,6 +65,8 @@ import RequestResult.PersonResult;
 
             PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result.getAuthtoken());
 
+            dataCache.setFirstChildPerson(firstChild); //set the first child in the datacache
+
             System.out.println("The user logged in was "+ result.getUsername());
             Bundle bundle = new Bundle();
             Message message = Message.obtain();

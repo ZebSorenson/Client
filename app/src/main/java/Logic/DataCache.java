@@ -4,11 +4,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import RequestResult.EventResult;
+import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
 import model.Event;
 import model.Person;
 
 public class DataCache {
+
+    PersonIDResult firstChildPerson = null;
+
+    public PersonIDResult getFirstChildPerson() {
+        return firstChildPerson;
+    }
+
+    public void setFirstChildPerson(PersonIDResult firstChildPerson) {
+        this.firstChildPerson = firstChildPerson;
+    }
 
     ArrayList<Person> people; //or should this be just a List?
 

@@ -53,6 +53,8 @@ public class LoginFragment extends Fragment {
 
     private Button Register, Login;
 
+
+
     public static DataCache dataCache = DataCache.getInstance();
 
     public LoginFragment() {
@@ -134,6 +136,18 @@ public class LoginFragment extends Fragment {
 
                     if (loginBundle.getBoolean(SUCCESS)) {
 
+                        Message successMessage =Message.obtain();
+
+                        Bundle messageBundle = new Bundle();
+
+                        messageBundle.putBoolean("LoginSuccess", true);
+
+                        messageBundle.putString("whichFragment", "MapsFragment");
+
+                        successMessage.setData(messageBundle);
+
+
+
                         System.out.println("you have entered a good toast object"); //used for testing the toast and verifying we arrive here
 
                         Toast.makeText(getActivity(), "Successful Login", Toast.LENGTH_SHORT).show(); //this toast will display first and then the next
@@ -141,8 +155,10 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getActivity(), "Welcome " + loginBundle.getString(FIRSTNAME) + " " + loginBundle.getString(LASTNAME) +" to your family app!", Toast.LENGTH_SHORT).show();
 
                         FragmentManager fragmentManager = getParentFragmentManager();
-                        // Fragment fragment = new LoginFragment(); // change this to map in the future
-                        // fragmentManager.beginTransaction().replace(R.id.mainActivity, fragment).commit();
+
+                        Fragment googleMapsFragment = new MapsFragment();
+
+                        fragmentManager.beginTransaction().replace(R.id.mainActivity, googleMapsFragment).commit();
 
                     } else {
                         //we'll arrive here for anything other than a succesfull login. Should handle any type of error
@@ -207,9 +223,11 @@ public class LoginFragment extends Fragment {
 
                         Toast.makeText(getActivity(), "Welcome newly registered user!  " + register_Bundle.getString(FIRSTNAME) + " " + register_Bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
 
-                        FragmentManager fragmentManager = getParentFragmentManager();
-                        // Fragment fragment = new LoginFragment(); // change this to map in the future
-                        // fragmentManager.beginTransaction().replace(R.id.mainActivity, fragment).commit();
+//                        FragmentManager fragmentManager = getParentFragmentManager();
+//
+//                        Fragment googleMapsFragment = new MapsFragment();
+//
+//                        fragmentManager.beginTransaction().replace(R.id.mainActivity, googleMapsFragment).commit();
 
                     } else {
                         Toast.makeText(getActivity(), "Error registering the user. Check input and try again", Toast.LENGTH_SHORT).show();
