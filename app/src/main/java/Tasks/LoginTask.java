@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import Logic.ServerProxy;
+import BackendLogic.ServerProxy;
 import RequestResult.EventResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
@@ -74,7 +74,7 @@ import RequestResult.PersonResult;
             bundle.putString(FIRSTNAME, firstChild.getFirstName()); //need to get first and last name of person
             bundle.putString(LASTNAME, firstChild.getLastName());
             message.setData(bundle);
-            handlerObject.sendMessage(message);
+
 
             PersonResult allPeople = proxyServer.getAllPersons(result.getAuthtoken());
 
@@ -83,6 +83,7 @@ import RequestResult.PersonResult;
             EventResult allEvents = proxyServer.getAllEvents(result.getAuthtoken());
 
             dataCache.addEventsCache(allEvents);
+            handlerObject.sendMessage(message);
 
 
         }else{

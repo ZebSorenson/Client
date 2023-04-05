@@ -1,17 +1,24 @@
 package com.example.zebfamilymap;
 
-import static java.security.AccessController.getContext;
+import static android.app.PendingIntent.getActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.widget.Toast;
 
-import Logic.DataCache;
+import BackendLogic.DataCache;
 import RequestResult.PersonIDResult;
+
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
+
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //handler is used to know when to switch
+
+        Iconify.with(new FontAwesomeModule());
+
+
 
 
         PersonIDResult child = myCache.getFirstChildPerson();

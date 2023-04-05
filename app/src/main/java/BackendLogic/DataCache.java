@@ -1,4 +1,4 @@
-package Logic;
+package BackendLogic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,24 +21,24 @@ public class DataCache {
         this.firstChildPerson = firstChildPerson;
     }
 
-    ArrayList<Person> people; //or should this be just a List?
+    ArrayList<Person> personArrayList = new ArrayList<>(); //or should this be just a List?
 
-    ArrayList<Event> events;
+    ArrayList<Event> eventArrayList = new ArrayList<>();
 
-    public ArrayList<Person> getPeople() {
-        return people;
+    public ArrayList<Person> getPersonArrayList() {
+        return personArrayList;
     }
 
-    public void setPeople(ArrayList<Person> people) {
-        this.people = people;
+    public void setPersonArrayList(ArrayList<Person> personArrayList) {
+        this.personArrayList = personArrayList;
     }
 
-    public ArrayList<Event> getEvents() {
-        return events;
+    public ArrayList<Event> getEventArrayList() {
+        return eventArrayList;
     }
 
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
+    public void setEventArrayList(ArrayList<Event> eventArrayList) {
+        this.eventArrayList = eventArrayList;
     }
 
     private static DataCache instance;
@@ -67,20 +67,22 @@ public class DataCache {
          personArray = (Person[])result.getData();
         //every person in the database, whether or not related.
 
-       // people.addAll(Arrays.asList(personArray)); //adding everyone to the ArrayList bcuz easier
+        //personArrayList.addAll(Arrays.asList(personArray)); //adding everyone to the ArrayList bcuz easier
+
+        personArrayList.addAll(Arrays.asList(personArray));
+
+        int size = personArrayList.size();
 
 
 
-
-
-        System.out.println(personArray.length + " person were added to the datacache");
+        System.out.println(personArrayList.size() + " person were added to the datacache");
 
 
     }
 
     public Person getPersonByID(String personID){
 
-        for(Person person: people){
+        for(Person person: personArrayList){
             if(person.getPersonID().equals(personID)){
                 return person;
             }
@@ -94,6 +96,8 @@ public class DataCache {
         Event[] eventArray = null;
 
         eventArray = (Event[]) result.getData();
+
+        eventArrayList.addAll(Arrays.asList(eventArray));
 
         System.out.println(eventArray.length+" Events were added to the datacache");
     }

@@ -1,8 +1,7 @@
-package Logic;
+package BackendLogic;
 import java.io.*;
 import java.net.*;
 
-import RequestResult.ClearResult;
 import RequestResult.EventResult;
 import RequestResult.LoginRequest;
 import RequestResult.LoginResult;
@@ -10,7 +9,6 @@ import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
 import RequestResult.RegisterRequest;
 import RequestResult.RegisterResult;
-import model.Person;
 
 import com.google.gson.Gson;
 
@@ -190,15 +188,19 @@ public class ServerProxy {
     //login function that returns a login result and takes in a loginRequest object
     //this will be called from within our run function
 
-    public LoginResult login(LoginRequest request){
+    public LoginResult login(LoginRequest loginRequestParam){
 
-        String requestString = "{\"username\":\"" + request.getUsername() +
-                "\", \"password\":\"" + request.getPassword() +
+        String login_request_dataString = "{\"username\":\""
+
+                + loginRequestParam.getUsername() +
+                "\", \"password\":\""
+
+                + loginRequestParam.getPassword() +
                 "\"}";
 
         //should be able to get register from specs
 
-       String responseData = post(requestString,"/user/login" );
+       String responseData = post(login_request_dataString,"/user/login" );
 
        //do some error checking here
 
@@ -209,14 +211,12 @@ public class ServerProxy {
             result.setSuccess(false);
             return result;
         }
-        //possibly do more error checking
+            //possibly do more error checking
 
             //use gson to take in response data
             Gson gson = new Gson();
 
-            LoginResult result = gson.fromJson(responseData, LoginResult.class);
-
-            return result;
+        return gson.fromJson(responseData, LoginResult.class);
 
 
     }
@@ -265,66 +265,41 @@ public class ServerProxy {
             return allEvents;
     }
 
-    public ClearResult clear() {
-        try {
-
-            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + "/clear");
-
-
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-
-
-            http.setRequestMethod("POST");
-
-
-            http.setDoOutput(true);
-
-            http.connect();
-
-            OutputStream reqBody = http.getOutputStream();
-
-            reqBody.close();
-
-            String respData = readString(http.getInputStream());
-
-            Gson gson = new Gson();
-
-            ClearResult result = gson.fromJson(respData, ClearResult.class);
-
-            return result;
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public RegisterResult register(RegisterRequest request) {
+    public RegisterResult register(RegisterRequest register_requestParam) {
 
         System.out.println("Entered into register proxy function");
 
-        String reqData = "{\"username\":\"" + request.getUsername() +
-                "\", \"password\":\"" + request.getPassword() +
-                "\", \"email\":\"" + request.getEmail() +
-                "\", \"firstName\":\"" + request.getFirstName() +
-                "\", \"lastName\":\"" + request.getLastName() +
-                "\", \"gender\":\"" + request.getGender() +
+        String register_Request_dataString = "{\"username\":\"" + register_requestParam.getUsername() +
+                "\", \"password\":\""+register_requestParam.getPassword() +
+
+                "\", \"email\":\""+register_requestParam.getEmail() +
+
+                "\", \"firstName\":\""+register_requestParam.getFirstName() +
+
+                "\", \"lastName\":\""+register_requestParam.getLastName() +
+
+                "\", \"gender\":\""+register_requestParam.getGender() +
+
                 "\"}";
 
-        String respData = post(reqData, "/user/register");
+        String resister_responseString = post(register_Request_dataString, "/user/register");
 
-        if (respData == null) {
+        if (resister_responseString == null) {
+            //we've recieved a bad result object
             RegisterResult badResult = new RegisterResult();
+
             badResult.setSuccess(false);
+
             badResult.setMessage("Error registering user");
+
             System.out.println("There was an issue registering the user");
+
             return badResult;
         }
 
         Gson gson = new Gson();
-        RegisterResult result = gson.fromJson(respData, RegisterResult.class);
 
-        return result;
+        return gson.fromJson(resister_responseString, RegisterResult.class);
     }
 
 

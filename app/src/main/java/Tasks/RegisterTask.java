@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import Logic.ServerProxy;
+import BackendLogic.ServerProxy;
 import RequestResult.EventResult;
 import RequestResult.PersonIDResult;
 import RequestResult.PersonResult;
@@ -52,7 +52,7 @@ public class RegisterTask implements Runnable {
             bundle.putString(FIRSTNAME, firstChild.getFirstName());
             bundle.putString(LASTNAME, firstChild.getLastName());
             message.setData(bundle);
-            handler.sendMessage(message);
+
 
             PersonResult allPeople = proxy.getAllPersons(registerResults.getAuthtoken());
 
@@ -61,6 +61,7 @@ public class RegisterTask implements Runnable {
             EventResult allEvents = proxy.getAllEvents(registerResults.getAuthtoken());
 
             dataCache.addEventsCache(allEvents);
+            handler.sendMessage(message);
         } else {
             Bundle bundle = new Bundle();
             Message message = Message.obtain();
