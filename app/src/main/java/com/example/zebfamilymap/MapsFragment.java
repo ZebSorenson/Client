@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import BackendLogic.DataCache;
 import model.Event;
@@ -63,10 +64,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         ArrayList<Event> userEvents = dataCache.getEventArrayList();
 
+        Random random = new Random();
+
       //create a LatLng object for each event in userEvents and then add a marker to the map for each event
         for (Event event : userEvents) {
             LatLng eventLocation = new LatLng(event.getLatitude(), event.getLongitude());
             String eventType = event.getEventType().toLowerCase(); // convert to lowercase
+
+            float[] hsv = new float[3];
+            hsv[0] = random.nextFloat() * 360; // hue
+            hsv[1] = random.nextFloat(); // saturation
+            hsv[2] = 1.0f; // value
             float color = BitmapDescriptorFactory.HUE_BLUE; // default color
             switch (eventType) {
                 case "birth":
@@ -77,6 +85,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     break;
                 case "death":
                     color = BitmapDescriptorFactory.HUE_ORANGE;
+                    break;
+                default:
+                    color = hsv[0]; // set color to random hue
                     break;
             }
             map.addMarker(new MarkerOptions()
