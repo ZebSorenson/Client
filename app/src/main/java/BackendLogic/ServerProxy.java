@@ -111,7 +111,7 @@ public class ServerProxy {
             http.setDoOutput(true);	// There is a request body
 
 
-            // Connect to the server and send the HTTP request
+            // Connect to the serv10er and send the HTTP request
             http.connect();
 
             // Get the output stream containing the HTTP request body

@@ -56,19 +56,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 //        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
 
-        LatLng sydney = new LatLng(-34, 151);
-        BitmapDescriptor markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney").icon(markerIcon));
-        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+//        LatLng sydney = new LatLng(-34, 151);
+//        BitmapDescriptor markerIcon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+//        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney").icon(markerIcon));
+//        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
 
         ArrayList<Event> userEvents = dataCache.getEventArrayList();
 
       //create a LatLng object for each event in userEvents and then add a marker to the map for each event
         for (Event event : userEvents) {
             LatLng eventLocation = new LatLng(event.getLatitude(), event.getLongitude());
-            map.addMarker(new MarkerOptions().position(eventLocation).title(event.getEventType() + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")"));
+            String eventType = event.getEventType().toLowerCase(); // convert to lowercase
+            float color = BitmapDescriptorFactory.HUE_BLUE; // default color
+            switch (eventType) {
+                case "birth":
+                    color = BitmapDescriptorFactory.HUE_GREEN;
+                    break;
+                case "marriage":
+                    color = BitmapDescriptorFactory.HUE_RED;
+                    break;
+                case "death":
+                    color = BitmapDescriptorFactory.HUE_ORANGE;
+                    break;
+            }
+            map.addMarker(new MarkerOptions()
+                    .position(eventLocation)
+                    .title(eventType + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")")
+                    .icon(BitmapDescriptorFactory.defaultMarker(color)));
             map.animateCamera(CameraUpdateFactory.newLatLng(eventLocation));
         }
+
+
 
 
 
