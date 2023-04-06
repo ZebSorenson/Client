@@ -5,22 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="412dp"
-        android:layout_height="452dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023"
-        tools:layout_editor_absoluteX="-3dp" />
-
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="409dp"
         android:layout_height="142dp"
-        android:layout_below="@+id/map"
-        android:layout_marginTop="-567dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,20 +16,17 @@
         app:layout_constraintVertical_bias="1.0">
 
         <TextView
-            android:id="@+id/mapEventInformation"
+            android:id="@+id/textView"
             android:layout_width="249dp"
             android:layout_height="61dp"
             android:text="Name and Event Details" />
 
         <ImageView
-            android:id="@+id/mapGenderImage"
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             tools:srcCompat="@tools:sample/avatars" />
-
-
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

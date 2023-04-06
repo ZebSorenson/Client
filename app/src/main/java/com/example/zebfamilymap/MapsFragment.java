@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,7 +22,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -31,10 +38,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public static DataCache dataCache = DataCache.getInstance();
 
+    public Event mapEvent;
+
+    public TextView mapEventText;
+
+    public ImageView mapImageView;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(layoutInflater, container, savedInstanceState);
         View view = layoutInflater.inflate(R.layout.fragment_maps, container, false);
+
+        mapEventText = view.findViewById(R.id.mapEventInformation);
+
+        mapImageView = view.findViewById(R.id.mapGenderImage); //maybe come back here. We did some kind of supression
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -66,6 +84,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         Random random = new Random();
 
+
+
       //create a LatLng object for each event in userEvents and then add a marker to the map for each event
         for (Event event : userEvents) {
             LatLng eventLocation = new LatLng(event.getLatitude(), event.getLongitude());
@@ -93,26 +113,58 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             map.addMarker(new MarkerOptions()
                     .position(eventLocation)
                     .title(eventType + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")")
-                    .icon(BitmapDescriptorFactory.defaultMarker(color)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(color))).setTag(event); //set the tag to the event object
             map.animateCamera(CameraUpdateFactory.newLatLng(eventLocation));
+
+
         }
 
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+
+                mapEvent = (Event)marker.getTag();
+
+                assert mapEvent != null;
+
+                //get all of the information of the person
+                //make a string from the information
+                //set the text of the mapEventText.set the text to be the String we've created.
+                //check if it is a male, display the male icon, if it is a female, display the female icon.
+                //use the font awesome resource
+
+                //Write a function in your DataCache that can take in a personID and return the person object that it's given.
+
+                //create a string and add the name to it (we will add more about the event)
+
+                //All the needed info about the event is already in the event object.
+
+                //set the textview to be equal to that string.
+
+                //based off the person object's gender, we'll set the ImageView = to either  boy or girl icon.
+
+                //return true not false....
+
+
+
+                return false;
+            }
+        });
+
+//        public Event mapEvent;
+//
+//        public TextView mapEventText;
+//
+//        public ImageView mapImageView;
 
 
 
 
 
-
-        //Similar to what you have above
-        //grab from the datacache all of your events
-        //use the add markers to put all of the events into here.
-        //Colors for the events,
-        //in the datacache, write a function that goes through the events
-        //and color coordinates them, array called event colors.
-        //add them to
-        //updateCache method
-        //right when you log in, everything gets color coordinated.
+//end of onMapReady
     }
+
+
 
     @Override
     public void onMapLoaded() {
