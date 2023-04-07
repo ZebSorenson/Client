@@ -1,7 +1,6 @@
 package com.example.zebfamilymap;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
@@ -19,7 +18,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -32,6 +30,7 @@ import java.util.Random;
 
 import BackendLogic.DataCache;
 import model.Event;
+import model.Person;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
     private GoogleMap map;
@@ -145,9 +144,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                 //return true not false....
 
+               Person person_from_event = dataCache.getPersonByPersonID(mapEvent.getPersonID());
+
+               if(person_from_event!=null){
+                   String textString = person_from_event.getFirstName()+ " "
+                           +person_from_event.getLastName()+": "
+                           + mapEvent.getEventType()+": "+
+                           mapEvent.getCity()+", "+
+                           mapEvent.getCountry()+"( "+mapEvent.getYear()+" )";
+
+                   mapEventText.setText(textString);
+
+                   if(person_from_event.getGender().equalsIgnoreCase("m")){
+
+                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(33);
+
+                       mapImageView.setImageDrawable(androidIcon);
+                   }else if(person_from_event.getGender().equalsIgnoreCase("f")){
+
+                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(33);
+
+                       mapImageView.setImageDrawable(androidIcon);
+                   }
+                   //possibly put another else case in here for an incorrect gender input?
+               }
 
 
-                return false;
+
+                return true;
             }
         });
 

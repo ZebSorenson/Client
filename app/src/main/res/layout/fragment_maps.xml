@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.023"
-        tools:layout_editor_absoluteX="-3dp" />
+        tools:layout_editor_absoluteX="-3dp"
+        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -32,7 +33,7 @@
             android:id="@+id/mapEventInformation"
             android:layout_width="249dp"
             android:layout_height="61dp"
-            android:text="Name and Event Details" />
+            android:text="Click on a marker to see details!" />
 
         <ImageView
             android:id="@+id/mapGenderImage"

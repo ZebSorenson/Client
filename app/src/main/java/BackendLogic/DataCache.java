@@ -102,6 +102,21 @@ public class DataCache {
         System.out.println(eventArray.length+" Events were added to the datacache");
     }
 
+    //function that goes through personArrayList and returns the person object with the personID given
+
+    //function that takes in a String personID and returns the person object with that personID from the personArrayList if the person is not found, return null
+
+    public Person getPersonByPersonID(String personID){
+
+        for(Person person: personArrayList){
+            if(person.getPersonID().equals(personID)){
+                return person;
+            }
+        }
+
+        return null;
+    }
+
 
     //end of class
 }
