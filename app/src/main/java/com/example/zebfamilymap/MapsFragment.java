@@ -157,12 +157,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                    if(person_from_event.getGender().equalsIgnoreCase("m")){
 
-                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(33);
+                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
 
                        mapImageView.setImageDrawable(androidIcon);
                    }else if(person_from_event.getGender().equalsIgnoreCase("f")){
 
-                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(33);
+                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(5);
 
                        mapImageView.setImageDrawable(androidIcon);
                    }
