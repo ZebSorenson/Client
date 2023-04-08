@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import Activities.PersonActivity;
 import BackendLogic.DataCache;
 import model.Event;
 import model.Person;
@@ -123,28 +124,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapEventText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View dialogView = inflater.inflate(R.layout.person_activity, null);
-                // set up the dialog with dialogView
-                AlertDialog dialog = new AlertDialog.Builder(getContext())
-                        .setView(dialogView)
-                        .create();
-                dialog.show();
+                PersonActivity.start(getActivity(), mapEvent);
             }
         });
 
         mapImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                View dialogView = inflater.inflate(R.layout.person_activity, null);
-                // set up the dialog with dialogView
-                AlertDialog dialog = new AlertDialog.Builder(getContext())
-                        .setView(dialogView)
-                        .create();
-                dialog.show();
+                PersonActivity.start(getActivity(), mapEvent);
             }
         });
+
 
 
 

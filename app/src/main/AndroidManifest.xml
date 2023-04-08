@@ -36,6 +36,13 @@
             android:value="AIzaSyDVtaUmKBUbgtIIhGOQOW3Kr18eYHnc1Lw" />
 
         <activity
+            android:name="Activities.PersonActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+
+
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -43,7 +50,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+
+
+
     </application>
 
 </manifest>
