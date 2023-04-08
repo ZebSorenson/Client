@@ -27,6 +27,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import BackendLogic.DataCache;
@@ -81,42 +82,41 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 //        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
 
         ArrayList<Event> userEvents = dataCache.getEventArrayList();
-
         Random random = new Random();
+        HashMap<String, Float> eventTypeColorMap = new HashMap<String, Float>();
 
-
-        //create a LatLng object for each event in userEvents and then add a marker to the map for each event
         for (Event event : userEvents) {
             LatLng eventLocation = new LatLng(event.getLatitude(), event.getLongitude());
-            String eventType = event.getEventType().toLowerCase(); // convert to lowercase
+            String eventType = event.getEventType().toLowerCase();
 
-            float[] hsv = new float[3];
-            hsv[0] = random.nextFloat() * 360; // hue
-            hsv[1] = random.nextFloat(); // saturation
-            hsv[2] = 1.0f; // value
-            float color = BitmapDescriptorFactory.HUE_BLUE; // default color
-            switch (eventType) {
-                case "birth":
+            float color;
+            if (eventTypeColorMap.containsKey(eventType)) {
+                color = eventTypeColorMap.get(eventType);
+            } else {
+                float[] hsv = new float[3];
+                hsv[0] = random.nextFloat() * 360;
+                hsv[1] = random.nextFloat();
+                hsv[2] = 1.0f;
+                if (eventType.equalsIgnoreCase("birth")) {
                     color = BitmapDescriptorFactory.HUE_GREEN;
-                    break;
-                case "marriage":
+                } else if (eventType.equalsIgnoreCase("marriage")) {
                     color = BitmapDescriptorFactory.HUE_RED;
-                    break;
-                case "death":
+                } else if (eventType.equalsIgnoreCase("death")) {
                     color = BitmapDescriptorFactory.HUE_ORANGE;
-                    break;
-                default:
-                    color = hsv[0]; // set color to random hue
-                    break;
+                } else {
+                    color = hsv[0];
+                    eventTypeColorMap.put(eventType, color);
+                }
             }
+
             map.addMarker(new MarkerOptions()
-                    .position(eventLocation)
-                    .title(eventType + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")")
-                    .icon(BitmapDescriptorFactory.defaultMarker(color))).setTag(event); //set the tag to the event object
+                            .position(eventLocation)
+                            .title(eventType + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")")
+                            .icon(BitmapDescriptorFactory.defaultMarker(color)))
+                    .setTag(event);
             map.animateCamera(CameraUpdateFactory.newLatLng(eventLocation));
-
-
         }
+
 
         //the below code is new
 
