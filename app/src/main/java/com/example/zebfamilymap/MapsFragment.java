@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -84,8 +85,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Random random = new Random();
 
 
-
-      //create a LatLng object for each event in userEvents and then add a marker to the map for each event
+        //create a LatLng object for each event in userEvents and then add a marker to the map for each event
         for (Event event : userEvents) {
             LatLng eventLocation = new LatLng(event.getLatitude(), event.getLongitude());
             String eventType = event.getEventType().toLowerCase(); // convert to lowercase
@@ -118,11 +118,45 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         }
 
+        //the below code is new
+
+        mapEventText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                View dialogView = inflater.inflate(R.layout.person_activity, null);
+                // set up the dialog with dialogView
+                AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setView(dialogView)
+                        .create();
+                dialog.show();
+            }
+        });
+
+        mapImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                View dialogView = inflater.inflate(R.layout.person_activity, null);
+                // set up the dialog with dialogView
+                AlertDialog dialog = new AlertDialog.Builder(getContext())
+                        .setView(dialogView)
+                        .create();
+                dialog.show();
+            }
+        });
+
+
+
+
+
+        //the above code is new
+
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
 
-                mapEvent = (Event)marker.getTag();
+                mapEvent = (Event) marker.getTag();
 
                 assert mapEvent != null;
 
@@ -147,31 +181,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                 //return true not false....
 
-               Person person_from_event = dataCache.getPersonByPersonID(mapEvent.getPersonID());
+                Person person_from_event = dataCache.getPersonByPersonID(mapEvent.getPersonID());
 
-               if(person_from_event!=null){
-                   String textString = person_from_event.getFirstName()+ " "
-                           +person_from_event.getLastName()+": "
-                           + mapEvent.getEventType()+": "+
-                           mapEvent.getCity()+", "+
-                           mapEvent.getCountry()+"( "+mapEvent.getYear()+" )";
+                if (person_from_event != null) {
+                    String textString = person_from_event.getFirstName() + " "
+                            + person_from_event.getLastName() + ": "
+                            + mapEvent.getEventType() + ": " +
+                            mapEvent.getCity() + ", " +
+                            mapEvent.getCountry() + "( " + mapEvent.getYear() + " )";
 
-                   mapEventText.setText(textString);
+                    mapEventText.setText(textString);
 
-                   if(person_from_event.getGender().equalsIgnoreCase("m")){
+                    if (person_from_event.getGender().equalsIgnoreCase("m")) {
 
-                       Drawable maleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
+                        Drawable maleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
 
-                       mapImageView.setImageDrawable(maleIcon);
-                   }else if(person_from_event.getGender().equalsIgnoreCase("f")){
+                        mapImageView.setImageDrawable(maleIcon);
+                    } else if (person_from_event.getGender().equalsIgnoreCase("f")) {
 
-                       Drawable femaleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(35);
+                        Drawable femaleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(35);
 
-                       mapImageView.setImageDrawable(femaleIcon);
-                   }
-                   //possibly put another else case in here for an incorrect gender input?
-               }
-
+                        mapImageView.setImageDrawable(femaleIcon);
+                    }
+                    //possibly put another else case in here for an incorrect gender input?
+                }
 
 
                 return true;
@@ -185,12 +218,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 //        public ImageView mapImageView;
 
 
-
-
-
 //end of onMapReady
     }
-
 
 
     @Override
@@ -203,13 +232,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onCreateOptionsMenu( Menu menu, MenuInflater menuInflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
         super.onCreateOptionsMenu(menu, menuInflater);
 
-        if(getActivity()!=null && getActivity().getClass() == MainActivity.class){
+        if (getActivity() != null && getActivity().getClass() == MainActivity.class) {
             menuInflater.inflate(R.menu.menu, menu);
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+    //end of class
 }

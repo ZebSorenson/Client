@@ -8,4 +8,7 @@
     <string name="login" > login</string>
     <string name="email" > email</string>
     <string name="username" > username</string>
+    <string name="event_Person_First_Name" />
+    <string name="event_Person_Last_Name" />
+    <string name="event_Person_Gender" />
 </resources>
