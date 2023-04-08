@@ -1,5 +1,6 @@
 package Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class PersonActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +41,10 @@ public class PersonActivity extends AppCompatActivity {
         //mEvent = DataCache.getInstance().getEventArrayList().get(eventId);
 
         // Set up the UI elements with the event information
-        TextView titleTextView = findViewById(R.id.personName);
+        @SuppressLint("CutPasteId") TextView titleTextView = findViewById(R.id.personName);
         titleTextView.setText(mEvent.getEventType() + ": " + mEvent.getCity() + ", " + mEvent.getCountry() + " (" + mEvent.getYear() + ")");
 
-        TextView personNameTextView = findViewById(R.id.personName);
+        @SuppressLint("CutPasteId") TextView personNameTextView = findViewById(R.id.personName);
         Person person = DataCache.getInstance().getPersonByPersonID(mEvent.getPersonID());
         String personName = person.getFirstName() + " " + person.getLastName();
         personNameTextView.setText(personName);
