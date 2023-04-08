@@ -126,6 +126,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                 assert mapEvent != null;
 
+                map.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition())); //center the map to the clicked event
+
+
                 //get all of the information of the person
                 //make a string from the information
                 //set the text of the mapEventText.set the text to be the String we've created.
@@ -157,14 +160,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                    if(person_from_event.getGender().equalsIgnoreCase("m")){
 
-                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
+                       Drawable maleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
 
-                       mapImageView.setImageDrawable(androidIcon);
+                       mapImageView.setImageDrawable(maleIcon);
                    }else if(person_from_event.getGender().equalsIgnoreCase("f")){
 
-                       Drawable androidIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(5);
+                       Drawable femaleIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(35);
 
-                       mapImageView.setImageDrawable(androidIcon);
+                       mapImageView.setImageDrawable(femaleIcon);
                    }
                    //possibly put another else case in here for an incorrect gender input?
                }
