@@ -37,8 +37,9 @@
 
         <activity
             android:name="Activities.PersonActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
+            android:label="Person Activity :)"
+            android:parentActivityName=".MainActivity"
+            />
 
         <activity
 

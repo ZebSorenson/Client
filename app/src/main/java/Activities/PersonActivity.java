@@ -35,18 +35,18 @@ public class PersonActivity extends AppCompatActivity {
         setContentView(R.layout.person_activity);
 
         // Get the event ID from the intent extras
-        String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
-
-        // Find the corresponding event from the data cache
-        //mEvent = DataCache.getInstance().getEventArrayList().get(eventId);
-
-        // Set up the UI elements with the event information
-        @SuppressLint("CutPasteId") TextView titleTextView = findViewById(R.id.personName);
-        titleTextView.setText(mEvent.getEventType() + ": " + mEvent.getCity() + ", " + mEvent.getCountry() + " (" + mEvent.getYear() + ")");
-
-        @SuppressLint("CutPasteId") TextView personNameTextView = findViewById(R.id.personName);
-        Person person = DataCache.getInstance().getPersonByPersonID(mEvent.getPersonID());
-        String personName = person.getFirstName() + " " + person.getLastName();
-        personNameTextView.setText(personName);
+//        String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
+//
+//        // Find the corresponding event from the data cache
+//        //mEvent = DataCache.getInstance().getEventArrayList().get(eventId);
+//
+//        // Set up the UI elements with the event information
+//        @SuppressLint("CutPasteId") TextView titleTextView = findViewById(R.id.personName);
+//        titleTextView.setText(mEvent.getEventType() + ": " + mEvent.getCity() + ", " + mEvent.getCountry() + " (" + mEvent.getYear() + ")");
+//
+//        @SuppressLint("CutPasteId") TextView personNameTextView = findViewById(R.id.personName);
+//        Person person = DataCache.getInstance().getPersonByPersonID(mEvent.getPersonID());
+//        String personName = person.getFirstName() + " " + person.getLastName();
+//        personNameTextView.setText(personName);
     }
 }
