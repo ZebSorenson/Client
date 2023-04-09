@@ -14,7 +14,11 @@ import BackendLogic.DataCache;
 import model.Event;
 import model.Person;
 
+
+
 public class PersonActivity extends AppCompatActivity {
+
+    public static DataCache dataCache = DataCache.getInstance();
 
     private static final String EXTRA_EVENT_ID = "com.example.zebfamilymap.event_id";
 
@@ -33,6 +37,25 @@ public class PersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.person_activity);
+
+        Person personToDisplay = dataCache.getPersonByID(mEvent.getPersonID());
+
+        //set the TextView personName to the person's name
+        TextView personName = findViewById(R.id.personName);
+
+
+        String personGender;
+        if(personToDisplay.getGender().equalsIgnoreCase("m")){
+             personGender = "Male";
+        }else{
+              personGender ="Female";
+        }
+
+        personName.setText(personToDisplay.getFirstName() + " " + personToDisplay.getLastName() + ": " + personGender);
+
+
+
+
 
         // Get the event ID from the intent extras
 //        String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
