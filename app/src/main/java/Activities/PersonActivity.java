@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zebfamilymap.R;
+
+import java.util.ArrayList;
 
 import BackendLogic.DataCache;
 import model.Event;
@@ -51,7 +54,14 @@ public class PersonActivity extends AppCompatActivity {
               personGender ="Female";
         }
 
-        personName.setText(personToDisplay.getFirstName() + " " + personToDisplay.getLastName() + ": " + personGender);
+        personName.setText("First Name: "+personToDisplay.getFirstName() + "\n"
+                +"Last Name: " +personToDisplay.getLastName() + "\n"
+                +"Gender: "+ personGender);
+
+        ExpandableListView eventInfo = findViewById(R.id.personActivity);
+
+        ArrayList<Event> userEvents = dataCache.getEventArrayList();
+
 
 
 

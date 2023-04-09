@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="67.5dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -15,7 +16,7 @@
             android:layout_height="wrap_content"
             android:padding="9dp"
             android:text="This is the person activity starting"
-            android:textSize="18dp" />
+            android:textSize="21.6sp" />
 
         <View
             android:layout_width="match_parent"
@@ -23,72 +24,38 @@
             android:background="@android:color/darker_gray"/>
 
         <TextView
+            android:id="@+id/first_nameID"
             android:layout_width="match_parent"
-            android:layout_height="22.5dp"
-            android:paddingLeft="3dp"
-            android:text="@string/event_Person_First_Name" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="67.5dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/personLastName"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:padding="9dp"
-            android:text="Test"
-            android:textSize="18dp" />
+            android:text="@string/event_Person_First_Name"
+            android:textSize="18sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/black"/>
 
         <TextView
+            android:id="@+id/last_nameID"
             android:layout_width="match_parent"
-            android:layout_height="22.5dp"
-            android:paddingLeft="3dp"
-            android:text="@string/event_Person_Last_Name" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="67.5dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/personGender"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:padding="9dp"
-            android:text="Test"
-            android:textSize="18dp" />
+            android:text="@string/event_Person_Last_Name"
+            android:textSize="18sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/black"/>
 
         <TextView
+            android:id="@+id/person_gender"
             android:layout_width="match_parent"
-            android:layout_height="22.5dp"
-            android:paddingLeft="3dp"
-            android:text="@string/event_Person_Gender" />
+            android:layout_height="wrap_content"
+            android:padding="9dp"
+            android:text="@string/event_Person_Gender"
+            android:textSize="18sp" />
 
         <View
             android:layout_width="match_parent"
@@ -100,6 +67,7 @@
     <ExpandableListView
         android:id="@+id/personActivity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
