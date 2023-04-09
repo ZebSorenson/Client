@@ -54,9 +54,22 @@ public class PersonActivity extends AppCompatActivity {
               personGender ="Female";
         }
 
-        personName.setText("First Name: "+personToDisplay.getFirstName() + "\n"
-                +"Last Name: " +personToDisplay.getLastName() + "\n"
-                +"Gender: "+ personGender);
+//        personName.setText("First Name: "+personToDisplay.getFirstName() + "\n"
+//                +"Last Name: " +personToDisplay.getLastName() + "\n"
+//
+//                +"Gender: "+ personGender);
+
+        TextView first_Name = findViewById(R.id.first_nameID);
+
+        first_Name.setText("First Name: "+personToDisplay.getFirstName());
+
+        TextView last_Name = findViewById(R.id.last_nameID);
+
+        last_Name.setText("Last Name: "+personToDisplay.getLastName());
+
+        TextView gender = findViewById(R.id.person_gender);
+
+        gender.setText("Gender: "+personGender);
 
         ExpandableListView eventInfo = findViewById(R.id.personActivity);
 
