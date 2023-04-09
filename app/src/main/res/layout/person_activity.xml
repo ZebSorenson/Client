@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="67.5dp"
@@ -18,11 +17,21 @@
             android:text="This is the person activity starting"
             android:textSize="18dp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="22.5dp"
             android:paddingLeft="3dp"
             android:text="@string/event_Person_First_Name" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
     </LinearLayout>
 
@@ -39,11 +48,21 @@
             android:text="Test"
             android:textSize="18dp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="22.5dp"
             android:paddingLeft="3dp"
             android:text="@string/event_Person_Last_Name" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
     </LinearLayout>
 
@@ -60,14 +79,23 @@
             android:text="Test"
             android:textSize="18dp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="22.5dp"
             android:paddingLeft="3dp"
             android:text="@string/event_Person_Gender" />
 
-    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
+    </LinearLayout>
 
     <ExpandableListView
         android:id="@+id/personActivity"
