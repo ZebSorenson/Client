@@ -11,4 +11,7 @@
     <string name="event_Person_First_Name" />
     <string name="event_Person_Last_Name" />
     <string name="event_Person_Gender" />
+    <string name="eventTitleString">Events</string>
+    <string name="personTitleString">Family Members</string>
+    <string name="listTitle">title of event</string>
 </resources>

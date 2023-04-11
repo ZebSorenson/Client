@@ -2,6 +2,8 @@ package BackendLogic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import RequestResult.EventResult;
 import RequestResult.PersonIDResult;
@@ -52,6 +54,56 @@ public class DataCache {
 
     private DataCache(){
 
+    }
+
+    //the below functions will be used in our person activity to get the events and family members of selected person
+
+    public ArrayList<Event> getEventsOfSpecificPerson(String personID){ //we can get a list of events based on a personID
+        ArrayList<Event> eventsOfPerson = new ArrayList<>();
+        for(Event event: eventArrayList){
+            if(event.getPersonID().equalsIgnoreCase(personID)){
+                eventsOfPerson.add(event);
+            }
+        }
+
+        //sort the eventsOfPerson based on each event's year so that the events are in chronological order
+        //we can use the sort function in the event class to sort the events based on year
+        //we can use the sort function in the event class to sort the events based on year
+        return eventsOfPerson;
+    }
+
+
+    //below is the same function as above but should sort the events
+
+    public ArrayList<Event> getSortedEventsBasedOnPersonID(String personID) {
+        ArrayList<Event> eventsOfPerson = new ArrayList<>();
+        for (Event event : eventArrayList) {
+            if (event.getPersonID().equalsIgnoreCase(personID)) {
+                eventsOfPerson.add(event);
+            }
+        }
+
+        // Sort the eventsOfPerson based on each event's year so that the events are in chronological order
+        Collections.sort(eventsOfPerson, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return Integer.compare(event1.getYear(), event2.getYear());
+            }
+        });
+
+        return eventsOfPerson;
+    }
+
+
+
+    public ArrayList<Person> getFamilyMembers(String personID){
+        ArrayList<Person> familyMembers = new ArrayList<>();
+        for(Person person: personArrayList){
+            if(person.getAssociatedUsername().equalsIgnoreCase(personID)){ //would this be associated username? Or PersonID?
+                familyMembers.add(person);
+            }
+        }
+        return familyMembers;
     }
 
 
