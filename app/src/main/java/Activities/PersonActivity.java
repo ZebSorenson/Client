@@ -3,17 +3,21 @@ package Activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zebfamilymap.R;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,24 +105,6 @@ public class PersonActivity extends AppCompatActivity {
         ArrayList<Event> userEvents = dataCache.getEventArrayList();
 
 
-
-
-
-
-        // Get the event ID from the intent extras
-//        String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
-//
-//        // Find the corresponding event from the data cache
-//        //mEvent = DataCache.getInstance().getEventArrayList().get(eventId);
-//
-//        // Set up the UI elements with the event information
-//        @SuppressLint("CutPasteId") TextView titleTextView = findViewById(R.id.personName);
-//        titleTextView.setText(mEvent.getEventType() + ": " + mEvent.getCity() + ", " + mEvent.getCountry() + " (" + mEvent.getYear() + ")");
-//
-//        @SuppressLint("CutPasteId") TextView personNameTextView = findViewById(R.id.personName);
-//        Person person = DataCache.getInstance().getPersonByPersonID(mEvent.getPersonID());
-//        String personName = person.getFirstName() + " " + person.getLastName();
-//        personNameTextView.setText(personName);
     }
 
 
@@ -162,6 +148,13 @@ public class PersonActivity extends AppCompatActivity {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
+
+            switch(groupPosition){
+                case EVENT_GROUP_POSITION:
+                    return eventList.get(childPosition);
+                case PERSON_GROUP_POSITION:
+                    return personList.get(childPosition);
+            }
             //this will not be used
             return null;
         }
@@ -184,15 +177,16 @@ public class PersonActivity extends AppCompatActivity {
         @SuppressLint("SetTextI18n")
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
             if(convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.event_single_item, parent, false); //DOUBLE CHECK THIS WHAT LAYOUT DOES THIS NEED TO BE?!!!!!!
+                convertView = getLayoutInflater().inflate(R.layout.event_list_item, parent, false); //DOUBLE CHECK THIS WHAT LAYOUT DOES THIS NEED TO BE?!!!!!!
             }
 
-            TextView titleView = convertView.findViewById(R.id.eventDetailsXMLID); //DOUBLE CHECK THIS?? WHAT IS THE LAYOUT SUPPOSED TO BE????
+            TextView titleView = convertView.findViewById(R.id.listTitle); //DOUBLE CHECK THIS?? WHAT IS THE LAYOUT SUPPOSED TO BE????
 
             switch (groupPosition) {
                 case EVENT_GROUP_POSITION:
-                    titleView.setText(R.string.listTitle); //WHAT THE HECK IS THIS???? (R.string.XXX)
+                    titleView.setText(R.string.eventTitleString); //WHAT THE HECK IS THIS???? (R.string.XXX)
                     break;
                 case PERSON_GROUP_POSITION:
                     titleView.setText(R.string.personTitleString);
@@ -210,12 +204,12 @@ public class PersonActivity extends AppCompatActivity {
 
             switch(groupPosition) {
                 case EVENT_GROUP_POSITION:
-                    itemView = getLayoutInflater().inflate(R.layout.event_list_item, parent, false); //dobule check this against what is in the example
-                    initializePersonAndEventView(itemView, childPosition);
+                    itemView = getLayoutInflater().inflate(R.layout.event_single_item, parent, false); //dobule check this against what is in the example
+                    initializeEventView(itemView, childPosition);
                     break;
                 case PERSON_GROUP_POSITION:
                     itemView = getLayoutInflater().inflate(R.layout.person_list_item, parent, false); //make this relatable to a person
-                    initializePersonAndEventView(itemView, childPosition);
+                    initializePersonView(itemView, childPosition);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized group position: " + groupPosition);
@@ -224,22 +218,54 @@ public class PersonActivity extends AppCompatActivity {
             return itemView;
         }
 
-        private void initializePersonAndEventView(View skiResortItemView, final int childPosition) {
-            TextView resortNameView = skiResortItemView.findViewById(R.id.eventDetailsXMLID);
-            resortNameView.setText(eventList.get(childPosition).getEventType());
+        private void initializeEventView(View eventItemView, final int childPosition) {
+
+            TextView eventTextView = eventItemView.findViewById(R.id.eventDetailsXMLID);
+
+            ImageView eventImageView = eventItemView.findViewById(R.id.eventDetailsPhotoID);
+
+            String eventInfo = eventList.get(childPosition).getEventType()+" "+ eventList.get(childPosition).getCity()+ " "+eventList.get(childPosition).getCountry()+" " + eventList.get(childPosition).getYear();
+
+            eventTextView.setText(eventInfo);
 
 
-            //is this where we are going to set the images??
 
-            TextView resortLocationView = skiResortItemView.findViewById(R.id.personGenderTextXML);
-            resortLocationView.setText(personList.get(childPosition).getGender());
+            Drawable eventMarker = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_map_marker).colorRes(R.color.byu_blue).sizeDp(35);
 
-            skiResortItemView.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("StringFormatInvalid")
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(PersonActivity.this, getString(R.string.event_Person_Gender, personList.get(childPosition).getGender()), Toast.LENGTH_SHORT).show();
-                }
+            eventImageView.setImageDrawable(eventMarker);
+
+
+            eventItemView.setOnClickListener(view ->{ //this is what you will use to go to a diff event
+
+
+                    Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
+
+            });
+        }
+
+        private void initializePersonView(View eventItemView, final int childPosition) {
+
+            TextView personName = eventItemView.findViewById(R.id.personGenderTextXML);
+
+            ImageView eventImageView = eventItemView.findViewById(R.id.personGenderImageXML);
+
+            String personInfoString = personList.get(childPosition).getFirstName()+" "+personList.get(childPosition).getLastName();
+
+            personName.setText(personInfoString);
+
+            if(personList.get(childPosition).getGender().equalsIgnoreCase("m")){
+                Drawable maleIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
+                eventImageView.setImageDrawable(maleIcon);
+            }else if(personList.get(childPosition).getGender().equalsIgnoreCase("f")){
+                Drawable femaleIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(35);
+                eventImageView.setImageDrawable(femaleIcon);
+            }
+
+
+            eventItemView.setOnClickListener(view ->{ //this is what you will use to go to a diff event
+
+                Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
+
             });
         }
 
@@ -253,7 +279,7 @@ public class PersonActivity extends AppCompatActivity {
 
 
 
-
+//might need to add the menu if needed
 
     //end of the class
 }
