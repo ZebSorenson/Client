@@ -12,10 +12,10 @@
 
         <TextView
             android:id="@+id/personName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:padding="9dp"
-            android:text="This is the person activity starting"
+
             android:textSize="21.6sp" />
 
         <View
