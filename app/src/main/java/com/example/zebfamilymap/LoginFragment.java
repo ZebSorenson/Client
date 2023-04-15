@@ -173,7 +173,7 @@ public class LoginFragment extends Fragment {
 
             login_Request.setPassword(passWord);
 
-            LoginTask task = new LoginTask(handler, login_Request); //call the login task that's in the Tasks package
+            LoginTask task = new LoginTask(handler, login_Request, host.getText().toString(), port.getText().toString()); //call the login task that's in the Tasks package
 
             ExecutorService executor_Service = Executors.newSingleThreadExecutor(); //handles the thread work
 
@@ -250,7 +250,7 @@ public class LoginFragment extends Fragment {
 
             register_Request.setGender(gender);
 
-            RegisterTask register_Task = new RegisterTask(handler, register_Request); //send the needed info to the register task class in Tasks
+            RegisterTask register_Task = new RegisterTask(handler, register_Request, host.getText().toString(),port.getText().toString()); //send the needed info to the register task class in Tasks
 
             ExecutorService executor_Service = Executors.newSingleThreadExecutor();
 
@@ -287,7 +287,7 @@ public class LoginFragment extends Fragment {
 
             LastName = lastName.getText().toString();
 
-            Login.setEnabled(!Username.isEmpty() && !Password.isEmpty());
+            Login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
 
             Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
 

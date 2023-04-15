@@ -32,13 +32,19 @@ import RequestResult.PersonResult;
     public LoginRequest requestObject;
 
     public Handler handlerObject;
+
+    public String host;
+
+    public String port;
     //our onclick listener is giving us our request
     //this will make this request and send it to the server and get back the result
 
-    public LoginTask(Handler handler, LoginRequest request){
+    public LoginTask(Handler handler, LoginRequest request, String host, String port) {
 
         this.handlerObject = handler;
         this.requestObject = request;
+        this.host = host;
+        this.port = port;
 
     }
 
@@ -46,7 +52,7 @@ import RequestResult.PersonResult;
     public void run() {
         //want to create proxy server
 
-        ServerProxy proxyServer = new ServerProxy(); // can set up to take in the host and port number
+        ServerProxy proxyServer = new ServerProxy(host, port); // can set up to take in the host and port number
 
         //YOU COULD SET THE PORT AND HOST RIGHT HERE SINCE YOU'VE ALREADY GABBED THE INFO ABOVE
 

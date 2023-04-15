@@ -22,15 +22,20 @@ public class RegisterTask implements Runnable {
     public Handler handler;
     public RegisterResult registerResults;
 
-    public RegisterTask(Handler handler, RegisterRequest request) {
+    public String host;
+    public String port;
+
+    public RegisterTask(Handler handler, RegisterRequest request, String host, String port) {
         this.handler = handler;
         this.request = request;
+        this.host = host;
+        this.port = port;
     }
 
 
     @Override
     public void run() {
-        ServerProxy proxy = new ServerProxy(); //want to add in the port and host number here
+        ServerProxy proxy = new ServerProxy(host, port); //want to add in the port and host number here
 
         registerResults = proxy.register(request);
 

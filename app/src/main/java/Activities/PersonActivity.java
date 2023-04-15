@@ -79,9 +79,9 @@ public class PersonActivity extends AppCompatActivity {
 
         String personGender;
         if(personToDisplay.getGender().equalsIgnoreCase("m")){
-             personGender = "Male";
+            personGender = "Male";
         }else{
-              personGender ="Female";
+            personGender ="Female";
         }
 
 //        personName.setText("First Name: "+personToDisplay.getFirstName() + "\n"
@@ -239,7 +239,7 @@ public class PersonActivity extends AppCompatActivity {
             eventItemView.setOnClickListener(view ->{ //this is what you will use to go to a diff event
 
 
-                    Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
 
             });
         }
@@ -275,6 +275,13 @@ public class PersonActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 
 
 

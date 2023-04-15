@@ -116,7 +116,7 @@ public class DataCache {
         Person[] personArray = null;
 
         //how do we deal with clearing the data?
-         personArray = (Person[])result.getData();
+        personArray = (Person[])result.getData();
         //every person in the database, whether or not related.
 
         //personArrayList.addAll(Arrays.asList(personArray)); //adding everyone to the ArrayList bcuz easier
@@ -184,5 +184,4 @@ public class DataCache {
 //this way you will have your base person with their relatives and events and arrays
 
 //Use the proxy server to get all the relatives that just logged in.
-
 

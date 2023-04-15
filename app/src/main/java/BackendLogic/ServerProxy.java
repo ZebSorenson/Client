@@ -19,9 +19,18 @@ import com.google.gson.Gson;
 */
 public class ServerProxy {
 
-   private String port;
+   private static String port;
 
-   private String host;
+   private static String host;
+
+   //A ServerProxy constructor that takes in the host and port number as strings and sets them to the private variables
+    public ServerProxy(String host, String port){
+         this.host = host;
+         this.port = port;
+
+    }
+
+
 
 
 
@@ -47,7 +56,7 @@ public class ServerProxy {
 
         try {
 
-            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + functionName);
+            URL url = new URL("http://" + host + ":" + port + functionName);
 
 
 
@@ -97,7 +106,7 @@ public class ServerProxy {
         try {
             // Create a URL indicating where the server is running, and which
             // web API operation we want to call
-            URL url = new URL("http://" + "10.0.2.2" + ":" + "8080" + functionCall);
+            URL url = new URL("http://" + host + ":" + port + functionCall);
 
             //192.168.5.200 the mcdonalds IP lol
             // Start constructing our HTTP request
