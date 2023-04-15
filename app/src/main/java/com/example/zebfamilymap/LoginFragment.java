@@ -119,6 +119,11 @@ public class LoginFragment extends Fragment {
 
         email.addTextChangedListener(textWatcher);
 
+        male.setOnClickListener(v -> updateRegisterButtonStatus());
+        female.setOnClickListener(v -> updateRegisterButtonStatus());
+
+
+
 
         //This is the functionality for what happenign when the login button is clicked
         Login.setOnClickListener(v -> {
@@ -236,6 +241,8 @@ public class LoginFragment extends Fragment {
                 }
             };
 
+
+
             RegisterRequest register_Request = new RegisterRequest();
 
             register_Request.setUsername(Username);
@@ -257,6 +264,8 @@ public class LoginFragment extends Fragment {
             executor_Service.submit(register_Task);
 
         });
+
+
 
         return view;
     }
@@ -289,7 +298,9 @@ public class LoginFragment extends Fragment {
 
             Login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
 
-            Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
+            updateRegisterButtonStatus();
+
+           // Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
 
             //want to set up listeners for both male and female buttons. Us an onclick listener and then put this code into those button listeners
 
@@ -310,7 +321,14 @@ public class LoginFragment extends Fragment {
         }
 
 
+
+
     };
+
+    private void updateRegisterButtonStatus() {
+        Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && (male.isChecked() || female.isChecked()));
+    }
+
 
     //end of class
 }
