@@ -49,7 +49,7 @@ public class LoginFragment extends Fragment {
 
     private RadioButton male, female;
 
-    private Button Register, Login;
+    private Button register, login;
 
     public static DataCache dataCache = DataCache.getInstance();
 
@@ -76,50 +76,52 @@ public class LoginFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_login_register, container, false);
 
-        Register = view.findViewById(R.id.register);
 
-        Login = view.findViewById(R.id.login);
 
-        host = view.findViewById(R.id.hostInput);
+        host = view.findViewById(R.id.host_number_editText);
 
-        port = view.findViewById(R.id.serverPortInput);
+        port = view.findViewById(R.id.port_number_editText);
 
-        username = view.findViewById(R.id.usernameInput);
+        username = view.findViewById(R.id.username_editText);
 
-        password = view.findViewById(R.id.passwordinput);
+        password = view.findViewById(R.id.password_editText);
 
-        email = view.findViewById(R.id.emailInput);
+        email = view.findViewById(R.id.email_editText);
 
-        firstName = view.findViewById(R.id.firstNameInput);
+        firstName = view.findViewById(R.id.first_name_editText);
 
-        lastName = view.findViewById(R.id.lastNameInput);
+        lastName = view.findViewById(R.id.last_name_editText);
 
-        male = view.findViewById(R.id.male);
+        male = view.findViewById(R.id.male_RadioButton);
 
-        female = view.findViewById(R.id.female);
+        female = view.findViewById(R.id.female_RadioButton);
+
+        register = view.findViewById(R.id.register_Button);
+
+        login = view.findViewById(R.id.login_Button);
 
         //We need to watch for any changes in the text!
 
-        host.addTextChangedListener(textWatcher);
+        host.addTextChangedListener(LoginFragment_textWatcher);
 
-        port.addTextChangedListener(textWatcher);
+        port.addTextChangedListener(LoginFragment_textWatcher);
 
-        username.addTextChangedListener(textWatcher);
+        username.addTextChangedListener(LoginFragment_textWatcher);
 
-        password.addTextChangedListener(textWatcher);
+        password.addTextChangedListener(LoginFragment_textWatcher);
 
-        firstName.addTextChangedListener(textWatcher);
+        firstName.addTextChangedListener(LoginFragment_textWatcher);
 
-        lastName.addTextChangedListener(textWatcher);
+        lastName.addTextChangedListener(LoginFragment_textWatcher);
 
-        email.addTextChangedListener(textWatcher);
+        email.addTextChangedListener(LoginFragment_textWatcher);
 
         male.setOnClickListener(v -> updateRegisterButtonStatus());
 
         female.setOnClickListener(v -> updateRegisterButtonStatus());
 
         //This is the functionality for what happens when the login button is clicked
-        Login.setOnClickListener(v -> {
+        login.setOnClickListener(v -> {
 
             String user_name = username.getText().toString();
             String user_Password = password.getText().toString();
@@ -177,7 +179,7 @@ public class LoginFragment extends Fragment {
 
         });
 
-        Register.setOnClickListener(v -> { //handles the logic for what happens when the Register button is clicked
+        register.setOnClickListener(v -> { //handles the logic for what happens when the Register button is clicked
 
             String gender = ""; //place holder for the gender string
 
@@ -252,10 +254,10 @@ public class LoginFragment extends Fragment {
     }
 
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private TextWatcher LoginFragment_textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        //Don't need to do anything
+        //Don't need to do anything!!!
         }
 
         @Override
@@ -277,7 +279,7 @@ public class LoginFragment extends Fragment {
 
             LastName = lastName.getText().toString();
 
-            Login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
+            login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
 
             updateRegisterButtonStatus(); //this will handle how we deal with the gender buttons
 
@@ -292,7 +294,7 @@ public class LoginFragment extends Fragment {
 
     private void updateRegisterButtonStatus() { // Register wil not become available until EVERYTHING is filled out/clicked
 
-        Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty()
+        register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty()
                 && !FirstName.isEmpty() && !LastName.isEmpty() && (male.isChecked() || female.isChecked()));
     }
 
