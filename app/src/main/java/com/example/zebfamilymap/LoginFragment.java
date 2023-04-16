@@ -40,8 +40,6 @@ public class LoginFragment extends Fragment {
 
     public static final String LASTNAME = "last name";
 
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -52,8 +50,6 @@ public class LoginFragment extends Fragment {
     private RadioButton male, female;
 
     private Button Register, Login;
-
-
 
     public static DataCache dataCache = DataCache.getInstance();
 
@@ -76,14 +72,13 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-         //brings the fragment into view
+         //brings the fragment into view for the user
 
         View view = inflater.inflate(R.layout.fragment_login_register, container, false);
 
-        Login = view.findViewById(R.id.login); //double check this
-
         Register = view.findViewById(R.id.register);
+
+        Login = view.findViewById(R.id.login);
 
         host = view.findViewById(R.id.hostInput);
 
@@ -120,16 +115,14 @@ public class LoginFragment extends Fragment {
         email.addTextChangedListener(textWatcher);
 
         male.setOnClickListener(v -> updateRegisterButtonStatus());
+
         female.setOnClickListener(v -> updateRegisterButtonStatus());
 
-
-
-
-        //This is the functionality for what happenign when the login button is clicked
+        //This is the functionality for what happens when the login button is clicked
         Login.setOnClickListener(v -> {
 
-            String userName = username.getText().toString();
-            String passWord = password.getText().toString();
+            String user_name = username.getText().toString();
+            String user_Password = password.getText().toString();
 
             //this code handles getting a message back from the request and displaying the toast
             @SuppressLint("HandlerLeak") Handler handler = new Handler(Looper.getMainLooper()) {
@@ -151,8 +144,6 @@ public class LoginFragment extends Fragment {
 
                         successMessage.setData(messageBundle);
 
-
-
                         System.out.println("you have entered a good toast object"); //used for testing the toast and verifying we arrive here
 
                         Toast.makeText(getActivity(), "Successful Login", Toast.LENGTH_SHORT).show(); //this toast will display first and then the next
@@ -161,7 +152,7 @@ public class LoginFragment extends Fragment {
 
                         FragmentManager fragmentManager = getParentFragmentManager();
 
-                        Fragment googleMapsFragment = new MapsFragment();
+                        Fragment googleMapsFragment = new MapFragment();
 
                         fragmentManager.beginTransaction().replace(R.id.mainActivity, googleMapsFragment).commit();
 
@@ -174,9 +165,9 @@ public class LoginFragment extends Fragment {
 
             LoginRequest login_Request = new LoginRequest();
 
-            login_Request.setUsername(userName);
+            login_Request.setUsername(user_name);
 
-            login_Request.setPassword(passWord);
+            login_Request.setPassword(user_Password);
 
             LoginTask task = new LoginTask(handler, login_Request, host.getText().toString(), port.getText().toString()); //call the login task that's in the Tasks package
 
@@ -228,20 +219,12 @@ public class LoginFragment extends Fragment {
 
                         Toast.makeText(getActivity(), "Welcome newly registered user!  " + register_Bundle.getString(FIRSTNAME) + " " + register_Bundle.getString(LASTNAME), Toast.LENGTH_SHORT).show();
 
-//                        FragmentManager fragmentManager = getParentFragmentManager();
-//
-//                        Fragment googleMapsFragment = new MapsFragment();
-//
-//                        fragmentManager.beginTransaction().replace(R.id.mainActivity, googleMapsFragment).commit();
-
                     } else {
                         Toast.makeText(getActivity(), "Error registering the user. Check input and try again", Toast.LENGTH_SHORT).show();
-                        //we'll arrive here for anything that isn't a successful register which should handle a majority of the erros
+                        //we'll arrive here for anything that isn't a successful register which should handle a majority of the errors
                     }
                 }
             };
-
-
 
             RegisterRequest register_Request = new RegisterRequest();
 
@@ -264,8 +247,6 @@ public class LoginFragment extends Fragment {
             executor_Service.submit(register_Task);
 
         });
-
-
 
         return view;
     }
@@ -298,20 +279,7 @@ public class LoginFragment extends Fragment {
 
             Login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
 
-            updateRegisterButtonStatus();
-
-           // Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && ((male.isChecked() || female.isChecked())));
-
-            //want to set up listeners for both male and female buttons. Us an onclick listener and then put this code into those button listeners
-
-            // Register.setEnabled(male.isSelected() || female.isSelected());
-
-            //need to update this so that male or female can be selected last
-
-            // Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty());
-
-            //DO THE ABOVE TASK TO HELP WITH THE GENDER BUTTONS!!!
-
+            updateRegisterButtonStatus(); //this will handle how we deal with the gender buttons
 
         }
 
@@ -320,13 +288,12 @@ public class LoginFragment extends Fragment {
             //Don't need to do anything
         }
 
-
-
-
     };
 
-    private void updateRegisterButtonStatus() {
-        Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty() && !FirstName.isEmpty() && !LastName.isEmpty() && (male.isChecked() || female.isChecked()));
+    private void updateRegisterButtonStatus() { // Register wil not become available until EVERYTHING is filled out/clicked
+
+        Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty()
+                && !FirstName.isEmpty() && !LastName.isEmpty() && (male.isChecked() || female.isChecked()));
     }
 
 

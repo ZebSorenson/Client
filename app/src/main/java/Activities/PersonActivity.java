@@ -19,14 +19,11 @@ import com.example.zebfamilymap.R;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import BackendLogic.DataCache;
 import model.Event;
 import model.Person;
-
-
 
 public class PersonActivity extends AppCompatActivity {
 
@@ -34,12 +31,16 @@ public class PersonActivity extends AppCompatActivity {
 
     private static final String EXTRA_EVENT_ID = "com.example.zebfamilymap.event_id";
 
-    private static Event mEvent;
+    private static Event selectedEvent;
 
     public static void start(Context context, Event event) {
-        mEvent = event;
+
+        selectedEvent = event;
+
         Intent intent = new Intent(context, PersonActivity.class);
+
         intent.putExtra(EXTRA_EVENT_ID, event.getEventID());
+
         context.startActivity(intent);
 
     }
@@ -49,6 +50,7 @@ public class PersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.person_activity);
 
 
@@ -56,38 +58,30 @@ public class PersonActivity extends AppCompatActivity {
 
         ExpandableListView expandableListView = findViewById(R.id.personActivity); //double check this personActivity marker
 
-        List<Event> eventList = dataCache.getEventArrayList();
-
-        List<Event> sortedEventList = dataCache.getSortedEventsBasedOnPersonID(mEvent.getPersonID()); //this should be a sorted list of events for the person given
+        List<Event> sortedEventList = dataCache.getSortedEventsBasedOnPersonID(selectedEvent.getPersonID()); //this should be a sorted list of events for the person given
 
         List<Person>  personList = dataCache.getPersonArrayList();
 
-        //event list and then personList
-
         expandableListView.setAdapter(new EventAndPersonAdapter(sortedEventList, personList));
-
-
 
         //expandable list view code above
 
-
-        Person personToDisplay = dataCache.getPersonByID(mEvent.getPersonID()); // the current person we are working with
+        Person personToDisplay = dataCache.getPersonByID(selectedEvent.getPersonID()); // the current person we are working with
 
         //set the TextView personName to the person's name
         TextView personName = findViewById(R.id.personName);
 
-
         String personGender;
+
         if(personToDisplay.getGender().equalsIgnoreCase("m")){
+
             personGender = "Male";
         }else{
+
             personGender ="Female";
         }
 
-//        personName.setText("First Name: "+personToDisplay.getFirstName() + "\n"
-//                +"Last Name: " +personToDisplay.getLastName() + "\n"
-//
-//                +"Gender: "+ personGender);
+        //set the items on the screen in relation to the person we are working with
 
         TextView first_Name = findViewById(R.id.first_nameID);
 
@@ -100,11 +94,6 @@ public class PersonActivity extends AppCompatActivity {
         TextView gender = findViewById(R.id.person_gender);
 
         gender.setText("Gender: "+personGender);
-
-        ExpandableListView eventInfo = findViewById(R.id.personActivity);
-
-        ArrayList<Event> userEvents = dataCache.getEventArrayList();
-
 
     }
 
@@ -120,7 +109,9 @@ public class PersonActivity extends AppCompatActivity {
         private final List<Person> personList;
 
         private EventAndPersonAdapter(List<Event> eventList, List<Person> personList) {
+
             this.eventList = eventList;
+
             this.personList = personList;
         }
 
@@ -177,20 +168,20 @@ public class PersonActivity extends AppCompatActivity {
 
         @SuppressLint("SetTextI18n")
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) { //make sure your are using the correct layouts!
 
             if(convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.event_list_item, parent, false); //DOUBLE CHECK THIS WHAT LAYOUT DOES THIS NEED TO BE?!!!!!!
+                convertView = getLayoutInflater().inflate(R.layout.event_list_item, parent, false);
             }
 
-            TextView titleView = convertView.findViewById(R.id.listTitle); //DOUBLE CHECK THIS?? WHAT IS THE LAYOUT SUPPOSED TO BE????
+            TextView title = convertView.findViewById(R.id.listTitle);
 
             switch (groupPosition) {
                 case EVENT_GROUP_POSITION:
-                    titleView.setText(R.string.eventTitleString); //WHAT THE HECK IS THIS???? (R.string.XXX)
+                    title.setText(R.string.eventTitleString); //WHAT THE HECK IS THIS???? (R.string.XXX)
                     break;
                 case PERSON_GROUP_POSITION:
-                    titleView.setText(R.string.personTitleString);
+                    title.setText(R.string.personTitleString);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized group position: " + groupPosition);
@@ -201,25 +192,30 @@ public class PersonActivity extends AppCompatActivity {
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            View itemView;
+
+            View singleItemView;
 
             switch(groupPosition) {
                 case EVENT_GROUP_POSITION:
-                    itemView = getLayoutInflater().inflate(R.layout.event_single_item, parent, false); //dobule check this against what is in the example
-                    initializeEventView(itemView, childPosition);
+
+                    singleItemView = getLayoutInflater().inflate(R.layout.event_single_item, parent, false); //double check this against what is in the ski example
+
+                    startEventView(singleItemView, childPosition);
                     break;
                 case PERSON_GROUP_POSITION:
-                    itemView = getLayoutInflater().inflate(R.layout.person_list_item, parent, false); //make this relatable to a person
-                    initializePersonView(itemView, childPosition);
+
+                    singleItemView = getLayoutInflater().inflate(R.layout.person_list_item, parent, false); //make this relatable to a person
+
+                    startPersonView(singleItemView, childPosition);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized group position: " + groupPosition);
             }
 
-            return itemView;
+            return singleItemView;
         }
 
-        private void initializeEventView(View eventItemView, final int childPosition) {
+        private void startEventView(View eventItemView, final int childPosition) {
 
             TextView eventTextView = eventItemView.findViewById(R.id.eventDetailsXMLID);
 
@@ -229,37 +225,37 @@ public class PersonActivity extends AppCompatActivity {
 
             eventTextView.setText(eventInfo);
 
-
-
             Drawable eventMarker = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_map_marker).colorRes(R.color.byu_blue).sizeDp(35);
 
             eventImageView.setImageDrawable(eventMarker);
 
-
             eventItemView.setOnClickListener(view ->{ //this is what you will use to go to a diff event
-
 
                 Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
 
             });
         }
 
-        private void initializePersonView(View eventItemView, final int childPosition) {
+        private void startPersonView(View eventItemView, final int childPosition) {
 
             TextView personName = eventItemView.findViewById(R.id.personGenderTextXML);
 
-            ImageView eventImageView = eventItemView.findViewById(R.id.personGenderImageXML);
+            ImageView personImageView = eventItemView.findViewById(R.id.personGenderImageXML);
 
             String personInfoString = personList.get(childPosition).getFirstName()+" "+personList.get(childPosition).getLastName();
 
             personName.setText(personInfoString);
 
             if(personList.get(childPosition).getGender().equalsIgnoreCase("m")){
+
                 Drawable maleIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_male).colorRes(R.color.byu_blue).sizeDp(35);
-                eventImageView.setImageDrawable(maleIcon);
+
+                personImageView.setImageDrawable(maleIcon);
             }else if(personList.get(childPosition).getGender().equalsIgnoreCase("f")){
+
                 Drawable femaleIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female).colorRes(R.color.pretty_pink).sizeDp(35);
-                eventImageView.setImageDrawable(femaleIcon);
+
+                personImageView.setImageDrawable(femaleIcon);
             }
 
 
@@ -281,13 +277,6 @@ public class PersonActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
-
-
-
-
-
-
-//might need to add the menu if needed
 
     //end of the class
 }

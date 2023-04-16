@@ -24,40 +24,21 @@ public class ServerProxy {
    private static String host;
 
    //A ServerProxy constructor that takes in the host and port number as strings and sets them to the private variables
-    public ServerProxy(String host, String port){
+    public ServerProxy(String host, String port){ //this is how we will now be able to accept the host and port instead of hard coding it
+
          this.host = host;
+
          this.port = port;
 
     }
 
+    private static String get(String AuthToken, String functionName) { //will handle get methods with the server
 
-
-
-
-    // The client's "main" method.
-    // The "args" parameter should contain two command-line arguments:
-    // 1. The IP address or domain name of the machine running the server
-    // 2. The port number on which the server is accepting client connections
-
-
-    //for GET, the parameters will be an authtoken and a name.
-    //will be making a url that goes to the host and port but is going to the name of the person
-    //similar to addrequest property authorization and pass in the authtoken
-    //shouldn't need to use get until later in the project when you get all the people from the DB
-
-    //will follow same process for register
-
-    private static String get(String AuthToken, String functionName) { //WILL BECOME THE GET FUNCTION
-        //function name will be /person or /events depending on if getting events or getting people
-
-        // This method shows how to send a GET request to a server
-
-        String result = null;
+        String get_String = null;
 
         try {
 
             URL url = new URL("http://" + host + ":" + port + functionName);
-
 
 
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -69,7 +50,7 @@ public class ServerProxy {
             http.setDoOutput(false);
 
 
-            http.addRequestProperty("Authorization", AuthToken);
+            http.addRequestProperty("Authorization", AuthToken); //pass in our Auth token to make sure we can complete the request
 
 
             http.connect();
@@ -77,62 +58,38 @@ public class ServerProxy {
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
                 InputStream respBody = http.getInputStream();
-                result = readString(respBody);
-            } else {
-
+                get_String = readString(respBody);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+
+            e.printStackTrace(); //we can see what kind of error we're getting if we run into an issue when having a GET request
         }
 
-        return result;
+        return get_String;
     }
 
-    // The claimRoute method calls the server's "/routes/claim" operation to
-    // claim the route between Atlanta and Miami
-    private static String post(String requestString, String functionCall) {
+    private static String post(String requestString, String functionCall) { //almost the exact same logic as GET but for post requests
 
-        //take in a json string
-
-        //need login function
-        //register function
-        //post and get
-
-        // This method shows how to send a POST request to a server
-//        System.out.println("\n");
-//        System.out.println("Printing out the request data");
-//        System.out.println(requestString);
 
         try {
-            // Create a URL indicating where the server is running, and which
-            // web API operation we want to call
-            URL url = new URL("http://" + host + ":" + port + functionCall);
 
-            //192.168.5.200 the mcdonalds IP lol
-            // Start constructing our HTTP request
+            URL url = new URL("http://" + host + ":" + port + functionCall); //create our URL we'll use
+
+            //192.168.5.200 the mcdonalds IP lol...keeping this comment for the memory of going crazy trying to use Mcdonald's wifi and get this to work haha
+
             HttpURLConnection http = (HttpURLConnection)url.openConnection();
 
+            http.setRequestMethod("POST"); //distinguish what kind of request we're doing
 
-            // Specify that we are sending an HTTP POST request
-            http.setRequestMethod("POST");
+            http.setDoOutput(true);
 
-            // Indicate that this request will contain an HTTP request body
-            http.setDoOutput(true);	// There is a request body
+            http.connect(); //make the connection!
 
+            OutputStream request_String = http.getOutputStream();
 
-            // Connect to the serv10er and send the HTTP request
-            http.connect();
+            writeString(requestString, request_String); //write string
 
-            // Get the output stream containing the HTTP request body
-            OutputStream reqBody = http.getOutputStream();
-
-            // Write the JSON data to the request body
-
-            writeString(requestString, reqBody);
-
-            // Close the request body output stream, indicating that the
-            // request is complete
-            reqBody.close();
+            request_String.close(); //after the request is made we need to close it
 
 
             // By the time we get here, the HTTP response has been received from the server.
@@ -140,41 +97,26 @@ public class ServerProxy {
             // status code, which means "success".  Treat anything else as a failure.
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                // The HTTP response status code indicates success,
-                // so print a success message
-               // System.out.println("Login successfull");
-
-                //need to return the response we get back from the server.
-
-                //post is taking in the req data and the server will send back response body
-                //on top of this, we'll make login and register functions to turn this into the appropriate result.
-
                 InputStream respBody = http.getInputStream();
 
-                // Extract data from the HTTP response body
-                String respData = readString(respBody);
+                String respData = readString(respBody); //get the needed data out of the string
 
                 return respData;
             }
             else {
 
-             //not success, return null
-
-                return null;
+                return null; //anything that isn't a good execution will return a null object
             }
         }
-        catch (IOException e) {
-            // An exception was thrown, so display the exception's stack trace
-            e.printStackTrace();
-        }
+        catch (IOException e) {e.printStackTrace();} //for debugging. Get the needed error to print out
 
-        return null;
+        return null; //if we've somehow made it here, something weird has happened and we need to return null
     }
 
     /*
         The readString method shows how to read a String from an InputStream.
     */
-    private static String readString(InputStream is) throws IOException {
+    private static String readString(InputStream is) throws IOException { //example code given from class
         StringBuilder sb = new StringBuilder();
         InputStreamReader sr = new InputStreamReader(is);
         char[] buf = new char[1024];
@@ -188,7 +130,7 @@ public class ServerProxy {
     /*
         The writeString method shows how to write a String to an OutputStream.
     */
-    private static void writeString(String str, OutputStream os) throws IOException {
+    private static void writeString(String str, OutputStream os) throws IOException {//example code given from class
         OutputStreamWriter sw = new OutputStreamWriter(os);
         sw.write(str);
         sw.flush();
@@ -199,13 +141,7 @@ public class ServerProxy {
 
     public LoginResult login(LoginRequest loginRequestParam){
 
-        String login_request_dataString = "{\"username\":\""
-
-                + loginRequestParam.getUsername() +
-                "\", \"password\":\""
-
-                + loginRequestParam.getPassword() +
-                "\"}";
+        String login_request_dataString = "{\"username\":\"" + loginRequestParam.getUsername() + "\", \"password\":\"" + loginRequestParam.getPassword() + "\"}";
 
         //should be able to get register from specs
 
@@ -214,20 +150,21 @@ public class ServerProxy {
        //do some error checking here
 
         if(responseData == null){
+
             LoginResult result = new LoginResult();
 
             result.setMessage("Error logging in");
+
             result.setSuccess(false);
+
             return result;
         }
-            //possibly do more error checking
+        //possibly do more error checking here
 
-            //use gson to take in response data
-            Gson gson = new Gson();
+        //use gson to take in response data
+        Gson gson = new Gson();
 
         return gson.fromJson(responseData, LoginResult.class);
-
-
     }
 
     public PersonIDResult getSinglePerson(String personID, String token){
@@ -235,20 +172,19 @@ public class ServerProxy {
        String responseData = get(token,"/person/"+personID);
 
         if(responseData == null){
+
             PersonIDResult person_result = new PersonIDResult();
 
             person_result.setMessage("Error grabbing person info");
+
             person_result.setSuccess(false);
+
             return person_result;
         }
 
         Gson gson = new Gson();
 
-        PersonIDResult singlePersonResult = gson.fromJson(responseData, PersonIDResult.class);
-
-        return singlePersonResult;
-
-
+        return gson.fromJson(responseData, PersonIDResult.class);
 
     }
 
@@ -258,9 +194,7 @@ public class ServerProxy {
 
         Gson gson = new Gson();
 
-        PersonResult allPersons  = gson.fromJson(peopleList, PersonResult.class);
-
-        return allPersons;
+        return gson.fromJson(peopleList, PersonResult.class);
     }
 
     public EventResult getAllEvents(String authToken){
@@ -269,32 +203,29 @@ public class ServerProxy {
 
             Gson gson = new Gson();
 
-            EventResult allEvents = gson.fromJson(eventList, EventResult.class);
-
-            return allEvents;
+        return gson.fromJson(eventList, EventResult.class);
     }
 
     public RegisterResult register(RegisterRequest register_requestParam) {
 
         System.out.println("Entered into register proxy function");
 
-        String register_Request_dataString = "{\"username\":\"" + register_requestParam.getUsername() +
-                "\", \"password\":\""+register_requestParam.getPassword() +
+        String register_Request_dataString =
 
-                "\", \"email\":\""+register_requestParam.getEmail() +
+                "{\"username\":\"" + register_requestParam.getUsername() + "\", \"password\":\""+register_requestParam.getPassword() + "\", \"email\":\""
 
-                "\", \"firstName\":\""+register_requestParam.getFirstName() +
+                +register_requestParam.getEmail() + "\", \"firstName\":\""+register_requestParam.getFirstName() +
 
                 "\", \"lastName\":\""+register_requestParam.getLastName() +
 
                 "\", \"gender\":\""+register_requestParam.getGender() +
 
-                "\"}";
+                "\"}"; //dang that is a long string
 
         String resister_responseString = post(register_Request_dataString, "/user/register");
 
         if (resister_responseString == null) {
-            //we've recieved a bad result object
+            //bad object!
             RegisterResult badResult = new RegisterResult();
 
             badResult.setSuccess(false);
@@ -311,19 +242,6 @@ public class ServerProxy {
         return gson.fromJson(resister_responseString, RegisterResult.class);
     }
 
-
-
-
-
 //end of class
 }
 
-
-//TODO in server proxy
-
-//1st create the get function
-//Make a get people and events functions which will be similar to the login function...getpeople will take authtoken withot string
-
-//call server get, do the gson to json logic and return the result (get people and events functions)
-
-//get will take in an authtoken and a name
