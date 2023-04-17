@@ -60,9 +60,7 @@ public class PersonActivity extends AppCompatActivity {
 
         List<Event> sortedEventList = dataCache.getSortedEventsBasedOnPersonID(selectedEvent.getPersonID()); //this should be a sorted list of events for the person given
 
-       // List<Person>  personList = dataCache.getPersonArrayList(); //possibly bring this back
-
-        List<Person> personList = dataCache.getRelatedPeople(selectedEvent.getPersonID());
+        List<Person> personList = dataCache.sortedFamilyMembers(selectedEvent.getPersonID()); //this will give us our family members in correct order
 
 
         expandableListView.setAdapter(new EventAndPersonAdapter(sortedEventList, personList));
@@ -245,8 +243,9 @@ public class PersonActivity extends AppCompatActivity {
 
             ImageView personImageView = eventItemView.findViewById(R.id.personGenderImageXML);
 
-            String relationshipType = getRelationshipType(personList.get(childPosition).getPersonID());
-            String personInfoString = personList.get(childPosition).getFirstName() + " " + personList.get(childPosition).getLastName() + " (" + relationshipType + ")";
+            String relationshipToPerson = getRelationship(personList.get(childPosition).getPersonID());
+
+            String personInfoString = personList.get(childPosition).getFirstName() + " " + personList.get(childPosition).getLastName() + ": " + relationshipToPerson ;
 
             personName.setText(personInfoString);
 
@@ -272,22 +271,6 @@ public class PersonActivity extends AppCompatActivity {
             });
         }
 
-        private String getRelationshipType(String personID) {
-            String relationship = "";
-            Person person = dataCache.getPersonByID(selectedEvent.getPersonID());
-
-            if (person.getFatherID() != null && person.getFatherID().equals(personID)) {
-                relationship = "Father";
-            } else if (person.getMotherID() != null && person.getMotherID().equals(personID)) {
-                relationship = "Mother";
-            } else if (person.getSpouseID() != null && person.getSpouseID().equals(personID)) {
-                relationship = "Spouse";
-            } else {
-                relationship = "Child";
-            }
-
-            return relationship;
-        }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
@@ -299,6 +282,28 @@ public class PersonActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private String getRelationship(String personID) { //with the person's ID we can check to see what kind of relationship we are looking at
+
+        String relationship = "";
+
+        Person person = dataCache.getPersonByID(selectedEvent.getPersonID());
+
+        if (person.getFatherID() != null && person.getFatherID().equals(personID)) {
+
+            relationship = "Father";
+        } else if (person.getMotherID() != null && person.getMotherID().equals(personID)) {
+
+            relationship = "Mother";
+        } else if (person.getSpouseID() != null && person.getSpouseID().equals(personID)) {
+
+            relationship = "Spouse";
+        } else {
+            relationship = "Child"; //anything that isn't Father, Mother, or Spouse is going to be a child
+        }
+
+        return relationship;
     }
 
     //end of the class

@@ -50,33 +50,39 @@ public class DataCache {
 
     }
 
-    public ArrayList<Person> getRelatedPeople(String personID) {
-        ArrayList<Person> relatedPeople = new ArrayList<>();
+    public ArrayList<Person> sortedFamilyMembers(String personID) {
+
+        ArrayList<Person> currentPersonFamily = new ArrayList<>();
+
         Person currentPerson = getPersonByID(personID);
 
         if (currentPerson != null) {
-            // Add father if exists
-            if (currentPerson.getFatherID() != null) {
-                relatedPeople.add(getPersonByID(currentPerson.getFatherID()));
+
+            if (currentPerson.getFatherID() != null) {//check if father exists
+
+                currentPersonFamily.add(getPersonByID(currentPerson.getFatherID()));
             }
-            // Add mother if exists
-            if (currentPerson.getMotherID() != null) {
-                relatedPeople.add(getPersonByID(currentPerson.getMotherID()));
+
+            if (currentPerson.getMotherID() != null) { //check if the mother exists
+
+                currentPersonFamily.add(getPersonByID(currentPerson.getMotherID()));
             }
-            // Add spouse if exists
-            if (currentPerson.getSpouseID() != null) {
-                relatedPeople.add(getPersonByID(currentPerson.getSpouseID()));
+
+            if (currentPerson.getSpouseID() != null) { //check if the spouse exists
+
+                currentPersonFamily.add(getPersonByID(currentPerson.getSpouseID()));
             }
-            // Add children
+            // handle children
             for (Person person : personArrayList) {
-                if (person.getFatherID() != null && person.getFatherID().equalsIgnoreCase(personID) ||
-                        person.getMotherID() != null && person.getMotherID().equalsIgnoreCase(personID)) {
-                    relatedPeople.add(person);
+
+                if (person.getFatherID() != null && person.getFatherID().equalsIgnoreCase(personID) || person.getMotherID() != null && person.getMotherID().equalsIgnoreCase(personID)) {
+
+                    currentPersonFamily.add(person);
                 }
             }
         }
 
-        return relatedPeople;
+        return currentPersonFamily; //we should have a nicely sorted family list now :)
     }
 
 
