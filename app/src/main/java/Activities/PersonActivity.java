@@ -53,7 +53,6 @@ public class PersonActivity extends AppCompatActivity {
 
         setContentView(R.layout.person_activity);
 
-
         //expandable list view code below
 
         ExpandableListView expandableListView = findViewById(R.id.personActivity); //double check this personActivity marker
