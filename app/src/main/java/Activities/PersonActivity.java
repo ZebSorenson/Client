@@ -60,7 +60,10 @@ public class PersonActivity extends AppCompatActivity {
 
         List<Event> sortedEventList = dataCache.getSortedEventsBasedOnPersonID(selectedEvent.getPersonID()); //this should be a sorted list of events for the person given
 
-        List<Person>  personList = dataCache.getPersonArrayList();
+       // List<Person>  personList = dataCache.getPersonArrayList(); //possibly bring this back
+
+        List<Person> personList = dataCache.getRelatedPeople(selectedEvent.getPersonID());
+
 
         expandableListView.setAdapter(new EventAndPersonAdapter(sortedEventList, personList));
 
@@ -242,9 +245,12 @@ public class PersonActivity extends AppCompatActivity {
 
             ImageView personImageView = eventItemView.findViewById(R.id.personGenderImageXML);
 
-            String personInfoString = personList.get(childPosition).getFirstName()+" "+personList.get(childPosition).getLastName();
+            String relationshipType = getRelationshipType(personList.get(childPosition).getPersonID());
+            String personInfoString = personList.get(childPosition).getFirstName() + " " + personList.get(childPosition).getLastName() + " (" + relationshipType + ")";
 
             personName.setText(personInfoString);
+
+
 
             if(personList.get(childPosition).getGender().equalsIgnoreCase("m")){
 
@@ -264,6 +270,23 @@ public class PersonActivity extends AppCompatActivity {
                 Toast.makeText(PersonActivity.this, "text listener", Toast.LENGTH_SHORT).show();
 
             });
+        }
+
+        private String getRelationshipType(String personID) {
+            String relationship = "";
+            Person person = dataCache.getPersonByID(selectedEvent.getPersonID());
+
+            if (person.getFatherID() != null && person.getFatherID().equals(personID)) {
+                relationship = "Father";
+            } else if (person.getMotherID() != null && person.getMotherID().equals(personID)) {
+                relationship = "Mother";
+            } else if (person.getSpouseID() != null && person.getSpouseID().equals(personID)) {
+                relationship = "Spouse";
+            } else {
+                relationship = "Child";
+            }
+
+            return relationship;
         }
 
         @Override

@@ -50,6 +50,36 @@ public class DataCache {
 
     }
 
+    public ArrayList<Person> getRelatedPeople(String personID) {
+        ArrayList<Person> relatedPeople = new ArrayList<>();
+        Person currentPerson = getPersonByID(personID);
+
+        if (currentPerson != null) {
+            // Add father if exists
+            if (currentPerson.getFatherID() != null) {
+                relatedPeople.add(getPersonByID(currentPerson.getFatherID()));
+            }
+            // Add mother if exists
+            if (currentPerson.getMotherID() != null) {
+                relatedPeople.add(getPersonByID(currentPerson.getMotherID()));
+            }
+            // Add spouse if exists
+            if (currentPerson.getSpouseID() != null) {
+                relatedPeople.add(getPersonByID(currentPerson.getSpouseID()));
+            }
+            // Add children
+            for (Person person : personArrayList) {
+                if (person.getFatherID() != null && person.getFatherID().equalsIgnoreCase(personID) ||
+                        person.getMotherID() != null && person.getMotherID().equalsIgnoreCase(personID)) {
+                    relatedPeople.add(person);
+                }
+            }
+        }
+
+        return relatedPeople;
+    }
+
+
     public ArrayList<Event> getSortedEventsBasedOnPersonID(String personID) { // this will give us an ArrayList of Events in chronological order
 
         ArrayList<Event> eventsOfPerson = new ArrayList<>();
