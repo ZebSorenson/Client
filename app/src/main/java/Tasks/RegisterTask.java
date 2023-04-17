@@ -18,16 +18,16 @@ import RequestResult.RegisterResult;
 
 public class RegisterTask implements Runnable {
 
-    public RegisterRequest request;
-    public Handler handler;
-    public RegisterResult registerResults;
+    public RegisterRequest registerRequestObject;
+    public Handler handlerObject;
+    public RegisterResult registerResultObject;
 
     public String host;
     public String port;
 
-    public RegisterTask(Handler handler, RegisterRequest request, String host, String port) {
-        this.handler = handler;
-        this.request = request;
+    public RegisterTask(Handler handlerObject, RegisterRequest registerRequestObject, String host, String port) {
+        this.handlerObject = handlerObject;
+        this.registerRequestObject = registerRequestObject;
         this.host = host;
         this.port = port;
     }
@@ -35,44 +35,47 @@ public class RegisterTask implements Runnable {
 
     @Override
     public void run() {
-        ServerProxy proxy = new ServerProxy(host, port); //want to add in the port and host number here
+        ServerProxy proxy = new ServerProxy(host, port); //passing in the host and port number in order to make the connection with the server
 
-        registerResults = proxy.register(request);
+        registerResultObject = proxy.register(registerRequestObject); //same as with login. Our result object comes from calling the register API with our request object
+        //so we both set it and make the call all on one line of code
 
-        if (registerResults.getSuccess()) {
+        if (registerResultObject.getSuccess()) {//we were able to successfully registered the new user
 
-            //Update the dataCache Here!!
+            PersonIDResult firstChild = proxy.getSinglePerson(registerResultObject.getPersonID(), registerResultObject.getAuthtoken()); //we get the newly registered person
 
-            // Person firstChild = dataCache.getPersonByID(registerResults.getPersonID());
+            Bundle goodBundle = new Bundle();
 
-            //need a better way of getting the first and last name
-
-            PersonIDResult firstChild = proxy.getSinglePerson(registerResults.getPersonID(), registerResults.getAuthtoken());
-
-            //make the change here to get the person!!!
-
-            Bundle bundle = new Bundle();
             Message message = Message.obtain();
-            bundle.putBoolean(SUCCESS, true);
-            bundle.putString(FIRSTNAME, firstChild.getFirstName());
-            bundle.putString(LASTNAME, firstChild.getLastName());
-            message.setData(bundle);
 
+            goodBundle.putBoolean(SUCCESS, true); //indicate we had a good register
 
-            PersonResult allPeople = proxy.getAllPersons(registerResults.getAuthtoken());
+            goodBundle.putString(FIRSTNAME, firstChild.getFirstName());
 
-            dataCache.addFamilyMembers(allPeople);
+            goodBundle.putString(LASTNAME, firstChild.getLastName());
 
-            EventResult allEvents = proxy.getAllEvents(registerResults.getAuthtoken());
+            message.setData(goodBundle);
+
+            PersonResult allPeople = proxy.getAllPersons(registerResultObject.getAuthtoken()); //get an array of relatives just like in login
+
+            dataCache.addFamilyMembers(allPeople); //add those people to the datacache
+
+            EventResult allEvents = proxy.getAllEvents(registerResultObject.getAuthtoken());
 
             dataCache.addEventsCache(allEvents);
-            handler.sendMessage(message);
-        } else {
-            Bundle bundle = new Bundle();
+
+            handlerObject.sendMessage(message);
+        } else { //anything at all that is not a good login response will get taken care of here.
+
+            Bundle badBundle = new Bundle();
+
             Message message = Message.obtain();
-            bundle.putBoolean(SUCCESS, false);
-            message.setData(bundle);
-            handler.sendMessage(message);
+
+            badBundle.putBoolean(SUCCESS, false);//indicate we had a bad register
+
+            message.setData(badBundle);
+
+            handlerObject.sendMessage(message);
         }
     }
 }

@@ -49,7 +49,7 @@ public class LoginFragment extends Fragment {
 
     private RadioButton male, female;
 
-    private Button register, login;
+    private Button Register, Login;
 
     public static DataCache dataCache = DataCache.getInstance();
 
@@ -96,9 +96,9 @@ public class LoginFragment extends Fragment {
 
         female = view.findViewById(R.id.female_RadioButton);
 
-        register = view.findViewById(R.id.register_Button);
+        Register = view.findViewById(R.id.register_Button);
 
-        login = view.findViewById(R.id.login_Button);
+        Login = view.findViewById(R.id.login_Button);
 
         //We need to watch for any changes in the text!
 
@@ -121,7 +121,7 @@ public class LoginFragment extends Fragment {
         female.setOnClickListener(v -> updateRegisterButtonStatus());
 
         //This is the functionality for what happens when the login button is clicked
-        login.setOnClickListener(v -> {
+        Login.setOnClickListener(v -> {
 
             String user_name = username.getText().toString();
             String user_Password = password.getText().toString();
@@ -179,7 +179,7 @@ public class LoginFragment extends Fragment {
 
         });
 
-        register.setOnClickListener(v -> { //handles the logic for what happens when the Register button is clicked
+        Register.setOnClickListener(v -> { //handles the logic for what happens when the Register button is clicked
 
             String gender = ""; //place holder for the gender string
 
@@ -279,7 +279,7 @@ public class LoginFragment extends Fragment {
 
             LastName = lastName.getText().toString();
 
-            login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
+            Login.setEnabled(!Username.isEmpty() && !Password.isEmpty()&& !Host.isEmpty() && !Port.isEmpty());
 
             updateRegisterButtonStatus(); //this will handle how we deal with the gender buttons
 
@@ -294,7 +294,7 @@ public class LoginFragment extends Fragment {
 
     private void updateRegisterButtonStatus() { // Register wil not become available until EVERYTHING is filled out/clicked
 
-        register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty()
+        Register.setEnabled(!Host.isEmpty() && !Port.isEmpty() && !Username.isEmpty() && !Password.isEmpty() && !Email.isEmpty()
                 && !FirstName.isEmpty() && !LastName.isEmpty() && (male.isChecked() || female.isChecked()));
     }
 

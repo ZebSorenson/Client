@@ -1,9 +1,5 @@
 package Tasks;
 
-
-
-
-
 import static com.example.zebfamilymap.LoginFragment.FIRSTNAME;
 import static com.example.zebfamilymap.LoginFragment.LASTNAME;
 import static com.example.zebfamilymap.LoginFragment.SUCCESS;
@@ -23,11 +19,6 @@ import RequestResult.PersonResult;
 
 
  public class LoginTask implements Runnable{
-
-
-     //make a constructor to pass in items
-
-
 
     public LoginRequest requestObject;
 
@@ -50,60 +41,63 @@ import RequestResult.PersonResult;
 
     @Override
     public void run() {
-        //want to create proxy server
+        //want to create proxy server object and give it the given host and port numbers to make the conenction
 
-        ServerProxy proxyServer = new ServerProxy(host, port); // can set up to take in the host and port number
+        ServerProxy proxyServer = new ServerProxy(host, port);
 
-        //YOU COULD SET THE PORT AND HOST RIGHT HERE SINCE YOU'VE ALREADY GABBED THE INFO ABOVE
-
-
-        LoginResult result = proxyServer.login(requestObject);
+        LoginResult result = proxyServer.login(requestObject); //our result object will be what we get back from sending our request object to the login API of the server
+        //so we both set the result and make the call right here
 
 
-        if(result.getSuccess()){
-            //call the update datacache function
-            //update the datacache
-            //from the datacache you can get the base person
-            //create a bundle and a message that will be used in the on click listener
-            //bundle is a collection of data that you put in the message and then use the handler to send the message.
+        if(result.getSuccess()){ //this means the login was successful and we can move onto our next steps
 
-            //get your base person for the first and last name
-
-            PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result.getAuthtoken());
+            PersonIDResult firstChild = proxyServer.getSinglePerson(result.getPersonID(), result.getAuthtoken()); //this is going to be the person logging in
 
             dataCache.setFirstChildPerson(firstChild); //set the first child in the datacache
 
             System.out.println("The user logged in was "+ result.getUsername());
-            Bundle bundle = new Bundle();
+
+            Bundle goodBundle = new Bundle();
+
             Message message = Message.obtain();
-            bundle.putBoolean(SUCCESS, true);
-            bundle.putString(FIRSTNAME, firstChild.getFirstName()); //need to get first and last name of person
-            bundle.putString(LASTNAME, firstChild.getLastName());
-            message.setData(bundle);
 
+            goodBundle.putBoolean(SUCCESS, true); //indicate we had a good login
 
-            PersonResult allPeople = proxyServer.getAllPersons(result.getAuthtoken());
+            goodBundle.putString(FIRSTNAME, firstChild.getFirstName()); //need to get first and last name of person
 
-            dataCache.addFamilyMembers(allPeople);
+            goodBundle.putString(LASTNAME, firstChild.getLastName());
 
-            EventResult allEvents = proxyServer.getAllEvents(result.getAuthtoken());
+            message.setData(goodBundle);
+
+            PersonResult allPeople = proxyServer.getAllPersons(result.getAuthtoken()); //now we take care of updating the datacache with the logged in user's family members with the API
+            //the above code just gets the people back from the API call
+
+            dataCache.addFamilyMembers(allPeople); //now this actually handles adding it to an ArrayList in our datacache
+
+            EventResult allEvents = proxyServer.getAllEvents(result.getAuthtoken()); //the next 3 lines of code are the same logic as above just for events instead of family memebers
 
             dataCache.addEventsCache(allEvents);
+
             handlerObject.sendMessage(message);
 
 
         }else{
             //bad login
             //new bundle
-            //send a false value
-            Bundle bundle = new Bundle();
+            //set the success to false
+            Bundle badBundle = new Bundle();
+
             Message message = Message.obtain();
-            bundle.putBoolean(SUCCESS, false);
-            message.setData(bundle);
+
+            badBundle.putBoolean(SUCCESS, false); //indicate we had a bad login
+
+            message.setData(badBundle);
+
             handlerObject.sendMessage(message);
+
             System.out.println("An invalid username or password was given");
         }
 
-
     }
+    //end of run method
 }
