@@ -26,6 +26,7 @@ public class RegisterTask implements Runnable {
     public String port;
 
     public RegisterTask(Handler handlerObject, RegisterRequest registerRequestObject, String host, String port) {
+
         this.handlerObject = handlerObject;
         this.registerRequestObject = registerRequestObject;
         this.host = host;

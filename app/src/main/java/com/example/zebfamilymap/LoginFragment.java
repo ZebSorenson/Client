@@ -43,9 +43,11 @@ public class LoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private EditText host, port, username, password, email, firstName, lastName;
+    private EditText host, port, username,
+            password, email, firstName, lastName;
 
-    private String Host, Port, Username, Password, Email, FirstName, LastName;
+    private String Host, Port, Username,
+            Password, Email, FirstName, LastName;
 
     private RadioButton male, female;
 
@@ -154,7 +156,7 @@ public class LoginFragment extends Fragment {
 
                         FragmentManager fragmentManager = getParentFragmentManager();
 
-                        Fragment googleMapsFragment = new MapFragment();
+                        Fragment googleMapsFragment = new GoogleMapFragment();
 
                         fragmentManager.beginTransaction().replace(R.id.mainActivity, googleMapsFragment).commit();
 
@@ -181,15 +183,15 @@ public class LoginFragment extends Fragment {
 
         Register.setOnClickListener(v -> { //handles the logic for what happens when the Register button is clicked
 
-            String gender = ""; //place holder for the gender string
+            String blankGenderString = ""; //place holder for the gender string
 
             //check which gender button is checked and then set the gender to either m or f respectively
             if (female.isChecked()) {
 
-                gender = "f";
+                blankGenderString = "f";
             } else if (male.isChecked()) {
 
-                gender = "m";
+                blankGenderString = "m";
             }
 
             String Firstname = firstName.getText().toString();
@@ -240,7 +242,7 @@ public class LoginFragment extends Fragment {
 
             register_Request.setEmail(Email);
 
-            register_Request.setGender(gender);
+            register_Request.setGender(blankGenderString);
 
             RegisterTask register_Task = new RegisterTask(handler, register_Request, host.getText().toString(),port.getText().toString()); //send the needed info to the register task class in Tasks
 
@@ -263,7 +265,7 @@ public class LoginFragment extends Fragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            //capture the needed text from the login/register screen
+            //get info from our screen
 
             Host = host.getText().toString();
 

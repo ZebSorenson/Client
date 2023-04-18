@@ -33,6 +33,8 @@ public class PersonActivity extends AppCompatActivity {
 
     private static Event selectedEvent;
 
+
+
     public static void start(Context context, Event event) {
 
         selectedEvent = event;
@@ -44,6 +46,8 @@ public class PersonActivity extends AppCompatActivity {
         context.startActivity(intent);
 
     }
+
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -242,7 +246,7 @@ public class PersonActivity extends AppCompatActivity {
 
             ImageView personImageView = eventItemView.findViewById(R.id.personGenderImageXML);
 
-            String relationshipToPerson = getRelationship(personList.get(childPosition).getPersonID());
+            String relationshipToPerson = getRelationshipString(personList.get(childPosition).getPersonID());
 
             String personInfoString = personList.get(childPosition).getFirstName() + " " + personList.get(childPosition).getLastName() + ": " + relationshipToPerson ;
 
@@ -283,26 +287,27 @@ public class PersonActivity extends AppCompatActivity {
         return true;
     }
 
-    private String getRelationship(String personID) { //with the person's ID we can check to see what kind of relationship we are looking at
+    private String getRelationshipString(String personID) { //with the person's ID we can check to see what kind of relationship we are looking at
 
-        String relationship = "";
+        String updateRelationshipString = "";
 
         Person person = dataCache.getPersonByID(selectedEvent.getPersonID());
 
         if (person.getFatherID() != null && person.getFatherID().equals(personID)) {
 
-            relationship = "Father";
+            updateRelationshipString = "Father";
         } else if (person.getMotherID() != null && person.getMotherID().equals(personID)) {
 
-            relationship = "Mother";
+            updateRelationshipString = "Mother";
         } else if (person.getSpouseID() != null && person.getSpouseID().equals(personID)) {
 
-            relationship = "Spouse";
+            updateRelationshipString = "Spouse";
         } else {
-            relationship = "Child"; //anything that isn't Father, Mother, or Spouse is going to be a child
+
+            updateRelationshipString = "Child"; //anything that isn't Father, Mother, or Spouse is going to be a child
         }
 
-        return relationship;
+        return updateRelationshipString; //we can now add this to the string we display in the view to know what the relationship is :)
     }
 
     //end of the class

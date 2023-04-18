@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         else{
-            fragment_Design = new MapFragment();
+            fragment_Design = new GoogleMapFragment();
         }
         manager.beginTransaction().add(R.id.mainActivity, fragment_Design).commit();
 

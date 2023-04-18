@@ -35,7 +35,7 @@ import BackendLogic.DataCache;
 import model.Event;
 import model.Person;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
+public class GoogleMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
     private GoogleMap map;
 
     public static DataCache dataCache = DataCache.getInstance();
@@ -121,6 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
 
             Objects.requireNonNull(map.addMarker(new MarkerOptions() //set the info about our marker
+
                             .position(eventLocation)
                             .title(eventType + ": " + event.getCity() + ", " + event.getCountry() + " (" + event.getYear() + ")")
                             .icon(BitmapDescriptorFactory.defaultMarker(color))))
